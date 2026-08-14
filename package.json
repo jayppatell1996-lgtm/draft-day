@@ -1,0 +1,32 @@
+{
+  "name": "cric-fantasy-league",
+  "version": "0.1.0",
+  "description": "Season-long salary-cap head-to-head fantasy cricket league",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.16.0",
+    "@google/genai": "^0.15.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/auth-helpers-react": "^0.5.0",
+    "@supabase/supabase-js": "latest",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
+    "aos": "^2.3.4",
+    "cookie": "^1.0.2",
+    "next": "15.5.8",
+    "react": "latest",
+    "react-datepicker": "^8.3.0",
+    "react-dom": "latest",
+    "tailwind-merge": "1.8.1",
+    "tailwindcss": "3.3.2",
+    "tailwindcss-animate": "1.0.7"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23"
+  }
+}

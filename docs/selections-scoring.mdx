@@ -1,0 +1,44 @@
+export const meta = {
+  title: "Selections & Scoring",
+};
+
+# Selections & Scoring
+
+In the Fantasy Cricket app, users select up to **4 players** from each team (8 total) for each match.
+
+## Selection Logic
+
+- UI components responsible:
+  - `components/Matches.jsx`:
+    - `TodayMatchCard` component
+    - `SquadSelector` sub-component
+    - Functions: `handleSelectPlayer`, `handleSubmitSelection`
+
+## Scoring Criteria
+
+- **Batting** (`pages/api/run-leaderboard.js`):
+  - 30 points for scoring 30+ runs
+  - 60 points for scoring 50+ runs
+  - 150 points for scoring 100+ runs
+  - Only the highest milestone is awarded per player (not cumulative)
+  - Implemented in helper: `playerPoints`
+
+- **Bowling** (`pages/api/run-leaderboard.js`):
+  - 30 points per wicket taken
+  - Aggregated via `mapWickets` logic
+
+- **Sixes**:
+  - 5 points for each six hit by a player (using `six_x` from batting array)
+
+Refer to the above files for full implementation details.
+
+## Additional Features
+
+- **Dynamic AI Match Summary:** The application features an AI-powered summary for each match that dynamically changes based on the match status:
+  - **AI Fixture Preview:** Before the match, it offers insights like probable XIs, pitch reports, and players to watch.
+  - **AI Live Match Pulse:** During live play, it provides real-time updates on key events and momentum (refreshes periodically).
+  - **AI Match Update:** For matches starting soon or delayed, it gives relevant status updates.
+  - **AI Match Report:** After the match, it delivers a concise report summarizing key performances and the result.
+  This summary is displayed with an AuroraText effect and is expandable/collapsible in the UI (`components/Matches.jsx`).
+
+- **UI:** The summary section is expandable/collapsible, and overall design has been enhanced for clarity and aesthetics.

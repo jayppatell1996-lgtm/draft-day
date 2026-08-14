@@ -1,0 +1,11 @@
+-- -- SQL migration to create table for manual override of selection lock
+-- CREATE TABLE IF NOT EXISTS selection_lock_override (
+--   id BOOLEAN PRIMARY KEY DEFAULT TRUE CHECK (id = TRUE),
+--   enabled BOOLEAN NOT NULL DEFAULT FALSE,
+--   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+-- );
+
+-- -- Ensure a default row exists
+-- INSERT INTO selection_lock_override (id, enabled)
+-- VALUES (TRUE, FALSE)
+-- ON CONFLICT (id) DO NOTHING;

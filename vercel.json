@@ -1,0 +1,6 @@
+{
+    "crons": [
+      { "path": "/api/run-leaderboard",   "schedule": "30 18 * * *" },
+      { "path": "/api/refresh-fixtures",  "schedule": "0 0 * * *" }
+    ]
+}
