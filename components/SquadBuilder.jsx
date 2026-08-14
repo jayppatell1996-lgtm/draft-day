@@ -9,17 +9,17 @@ const SLOT_LABELS = {
 };
 
 function slotLabel(slot) {
-  const base = SLOT_LABELS[slot.slotType] || slot.slotType;
-  if (slot.slotType === 'BENCH') return `${base} ${slot.slotIndex + 1}`;
-  if (['BAT', 'BOWL'].includes(slot.slotType) && slot.slotIndex > 0) {
-    return `${base} ${slot.slotIndex + 1}`;
+  const base = SLOT_LABELS[slot.slot_type] || slot.slot_type;
+  if (slot.slot_type === 'BENCH') return `${base} ${slot.slot_index + 1}`;
+  if (['BAT', 'BOWL'].includes(slot.slot_type) && slot.slot_index > 0) {
+    return `${base} ${slot.slot_index + 1}`;
   }
   return base;
 }
 
 export default function SquadBuilder() {
   const [squadData, setSquadData] = useState(null);
-  const [players, setPlayers] = useState([]);
+  const [allPlayers, setAllPlayers] = useState([]);
   const [franchises, setFranchises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -38,17 +38,19 @@ export default function SquadBuilder() {
     return data;
   }, []);
 
-  const loadPlayers = useCallback(async (filters = {}) => {
-    const params = new URLSearchParams();
-    if (filters.role) params.set('role', filters.role);
-    if (filters.franchise) params.set('franchise', filters.franchise);
-    if (filters.search) params.set('search', filters.search);
-    const res = await fetch(`/api/league-players?${params.toString()}`);
+  const loadPlayers = useCallback(async () => {
+    const res = await fetch('/api/league-players', { cache: 'no-store' });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Failed to load players');
-    setPlayers(data.players || []);
-    setFranchises(data.franchises || []);
-    setSquadData((prev) => prev);
+    const pool = data.players || [];
+    setAllPlayers(pool);
+    setFranchises(
+      [...new Map(
+        pool
+          .filter((p) => p.franchiseExternalId)
+          .map((p) => [p.franchiseExternalId, { id: p.franchiseExternalId, name: p.franchiseName }])
+      ).values()].sort((a, b) => a.name.localeCompare(b.name))
+    );
   }, []);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export default function SquadBuilder() {
         if (squad.playerPoolSize === 0) {
           setError('Player pool is empty. Run: node --env-file=.env.local scripts/seed-players.js');
         }
-        await loadPlayers({});
+        await loadPlayers();
       } catch (err) {
         setError(err.message);
       } finally {
@@ -70,13 +72,17 @@ export default function SquadBuilder() {
     init();
   }, [loadSquad, loadPlayers]);
 
-  useEffect(() => {
-    if (loading) return;
-    const timer = setTimeout(() => {
-      loadPlayers({ role: roleFilter, franchise: franchiseFilter, search }).catch(() => {});
-    }, 250);
-    return () => clearTimeout(timer);
-  }, [roleFilter, franchiseFilter, search, loading, loadPlayers]);
+  const players = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return allPlayers.filter((player) => {
+      if (roleFilter && player.role !== roleFilter) return false;
+      if (franchiseFilter && String(player.franchiseExternalId) !== String(franchiseFilter)) {
+        return false;
+      }
+      if (q && !player.fullName.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [allPlayers, roleFilter, franchiseFilter, search]);
 
   const selectedSlot = useMemo(
     () => squadData?.slots?.find((s) => s.id === selectedSlotId) ?? null,
@@ -231,7 +237,7 @@ export default function SquadBuilder() {
                     className="flex w-full items-center gap-3 text-left"
                   >
                     <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-surface-900 text-xs font-semibold text-zinc-400">
-                      {slot.slotType}
+                      {slot.slot_type}
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="text-xs text-zinc-500">{slotLabel(slot)}</p>
@@ -316,31 +322,32 @@ export default function SquadBuilder() {
             </select>
           </div>
 
-          {!selectedSlotId ? (
-            <p className="text-sm text-zinc-500">Select a squad slot on the left to assign a player.</p>
-          ) : (
-            <div className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
-              {players.length === 0 ? (
-                <p className="text-sm text-zinc-500">No players match your filters.</p>
-              ) : (
-                players.map((player) => {
+          {!selectedSlotId && (
+            <p className="mb-3 text-sm text-zinc-500">
+              Browse and filter the pool below. Select a squad slot on the left to assign a player.
+            </p>
+          )}
+
+          <div className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
+            {players.length === 0 ? (
+              <p className="text-sm text-zinc-500">No players match your filters.</p>
+            ) : (
+              <>
+                <p className="mb-2 text-xs text-zinc-500">
+                  Showing {players.length} of {allPlayers.length} players
+                </p>
+                {players.map((player) => {
                   const owned = ownedIds.has(player.id);
                   const overBudget =
                     selectedSlot &&
                     squad.budgetRemaining + (selectedSlot.player?.price ?? 0) < player.price;
-                  const disabled = owned || overBudget || saving;
-                  return (
-                    <button
-                      key={player.id}
-                      type="button"
-                      disabled={disabled}
-                      onClick={() => handleAssign(player.id)}
-                      className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition-colors ${
-                        disabled
-                          ? 'cursor-not-allowed border-white/5 bg-surface-950/50 opacity-50'
-                          : 'border-white/10 bg-surface-950 hover:border-accent-500/30 hover:bg-accent-500/5'
-                      }`}
-                    >
+                  const canAssign = Boolean(selectedSlotId) && !owned && !overBudget && !saving;
+                  const rowClass = canAssign
+                    ? 'border-white/10 bg-surface-950 hover:border-accent-500/30 hover:bg-accent-500/5 cursor-pointer'
+                    : 'border-white/5 bg-surface-950/50';
+
+                  const content = (
+                    <>
                       <div className="h-9 w-9 overflow-hidden rounded-full border border-white/10 bg-surface-900">
                         {player.imageUrl ? (
                           <img src={player.imageUrl} alt="" className="h-full w-full object-cover" />
@@ -354,12 +361,39 @@ export default function SquadBuilder() {
                         </p>
                       </div>
                       {owned && <span className="text-xs text-zinc-500">In squad</span>}
-                    </button>
+                      {selectedSlotId && overBudget && !owned && (
+                        <span className="text-xs text-amber-400/80">Over budget</span>
+                      )}
+                    </>
                   );
-                })
-              )}
-            </div>
-          )}
+
+                  if (canAssign) {
+                    return (
+                      <button
+                        key={player.id}
+                        type="button"
+                        onClick={() => handleAssign(player.id)}
+                        className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left transition-colors ${rowClass}`}
+                      >
+                        {content}
+                      </button>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={player.id}
+                      className={`flex items-center gap-3 rounded-lg border px-3 py-2 ${rowClass} ${
+                        owned || overBudget ? 'opacity-60' : ''
+                      }`}
+                    >
+                      {content}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
         </section>
       </div>
     </div>

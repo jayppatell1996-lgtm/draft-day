@@ -1,26 +1,14 @@
 /**
- * Seed IPL player pool from Sportmonks squads into players + player_prices.
+ * Seed player pool from Sportmonks squads into players + player_prices.
+ *
+ * Your Sportmonks token may not include IPL — the script auto-detects available
+ * leagues and discovers teams from fixtures. Override with SPORTMONKS_LEAGUE_ID.
+ *
  * Usage: node --env-file=.env.local scripts/seed-players.js
  */
 const { Client } = require('pg');
 
 const DEFAULT_LEAGUE_ID = '00000000-0000-4000-8000-000000000001';
-
-// IPL franchise team IDs on Sportmonks (league_id=1)
-const IPL_TEAMS = [
-  { id: 1, name: 'Royal Challengers Bangalore' },
-  { id: 2, name: 'Mumbai Indians' },
-  { id: 3, name: 'Delhi Capitals' },
-  { id: 4, name: 'Kolkata Knight Riders' },
-  { id: 5, name: 'Rajasthan Royals' },
-  { id: 6, name: 'Punjab Kings' },
-  { id: 7, name: 'Sunrisers Hyderabad' },
-  { id: 8, name: 'Chennai Super Kings' },
-  { id: 9, name: 'Gujarat Titans' },
-  { id: 10, name: 'Lucknow Super Giants' },
-];
-
-const SEASON_ID = 1;
 
 function mapRole(position) {
   const value = String(position?.name || position || '').toLowerCase();
@@ -44,19 +32,138 @@ function defaultPrice(role) {
   }
 }
 
-async function fetchSquad(apiToken, teamId) {
-  const url = `https://cricket.sportmonks.com/api/v2.0/teams/${teamId}/squad/${SEASON_ID}?api_token=${apiToken}`;
+async function fetchJson(url) {
   const res = await fetch(url);
   if (!res.ok) {
-    throw new Error(`Sportmonks squad ${teamId}: HTTP ${res.status}`);
+    throw new Error(`HTTP ${res.status} — ${url.split('?')[0]}`);
   }
-  const json = await res.json();
-  return json.data?.squad || json.data || [];
+  return res.json();
+}
+
+async function listAvailableLeagues(apiToken) {
+  const json = await fetchJson(
+    `https://cricket.sportmonks.com/api/v2.0/leagues?api_token=${apiToken}&per_page=50`
+  );
+  return json.data || [];
+}
+
+function pickLeague(leagues, preferredId) {
+  if (preferredId) {
+    const match = leagues.find((l) => String(l.id) === String(preferredId));
+    if (match) return match;
+    console.warn(`SPORTMONKS_LEAGUE_ID=${preferredId} not in your plan; auto-selecting.`);
+  }
+
+  // Prefer franchise T20 leagues, then internationals
+  const priority = ['Big Bash', 'BBL', 'CPL', 'Caribbean', 'Hundred', 'IPL', 'Twenty20 International', 'T20'];
+  for (const needle of priority) {
+    const hit = leagues.find((l) => l.name?.toLowerCase().includes(needle.toLowerCase()));
+    if (hit) return hit;
+  }
+
+  return leagues[0] || null;
+}
+
+async function leagueHasSquadData(apiToken, league) {
+  const teams = await discoverTeams(apiToken, league.id);
+  const sample = teams.find((t) => t.name !== 'TBC' && !t.name?.startsWith('TBD'));
+  if (!sample) return false;
+
+  try {
+    const squad = await fetchSquad(
+      apiToken,
+      sample.id,
+      sample.seasonId || league.season_id
+    );
+    return squad.length > 0;
+  } catch {
+    return false;
+  }
+}
+
+async function resolveLeague(apiToken, leagues, preferredId) {
+  if (preferredId) {
+    const preferred = leagues.find((l) => String(l.id) === String(preferredId));
+    if (preferred && (await leagueHasSquadData(apiToken, preferred))) {
+      return preferred;
+    }
+    if (preferred) {
+      console.warn(`League ${preferred.name} has no squad data on your plan; trying others…`);
+    }
+  }
+
+  for (const league of leagues) {
+    console.log(`Checking squad data for ${league.name}…`);
+    if (await leagueHasSquadData(apiToken, league)) {
+      return league;
+    }
+  }
+
+  return null;
+}
+
+async function discoverTeams(apiToken, leagueId) {
+  const start = new Date();
+  start.setMonth(start.getMonth() - 6);
+  const end = new Date();
+  end.setMonth(end.getMonth() + 12);
+  const fmt = (d) => d.toISOString().slice(0, 10);
+  const range = `${fmt(start)},${fmt(end)}`;
+
+  const teams = new Map();
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore && page <= 5) {
+    const params = new URLSearchParams({
+      api_token: apiToken,
+      'filter[league_id]': String(leagueId),
+      'filter[starts_between]': range,
+      include: 'localteam,visitorteam',
+      per_page: '50',
+      page: String(page),
+    });
+
+    const json = await fetchJson(
+      `https://cricket.sportmonks.com/api/v2.0/fixtures?${params.toString()}`
+    );
+    const fixtures = json.data || [];
+
+    for (const fixture of fixtures) {
+      if (fixture.localteam?.id) {
+        teams.set(fixture.localteam.id, {
+          id: fixture.localteam.id,
+          name: fixture.localteam.name,
+          seasonId: fixture.season_id,
+        });
+      }
+      if (fixture.visitorteam?.id) {
+        teams.set(fixture.visitorteam.id, {
+          id: fixture.visitorteam.id,
+          name: fixture.visitorteam.name,
+          seasonId: fixture.season_id,
+        });
+      }
+    }
+
+    hasMore = Boolean(json.links?.next);
+    page += 1;
+  }
+
+  return [...teams.values()];
+}
+
+async function fetchSquad(apiToken, teamId, seasonId) {
+  const json = await fetchJson(
+    `https://cricket.sportmonks.com/api/v2.0/teams/${teamId}/squad/${seasonId}?api_token=${apiToken}`
+  );
+  return json.data?.squad || [];
 }
 
 async function main() {
   const apiToken = process.env.SPORTMONKS_API_TOKEN;
   const connectionString = process.env.DATABASE_URL;
+  const preferredLeagueId = process.env.SPORTMONKS_LEAGUE_ID;
 
   if (!apiToken) {
     console.error('ERROR: Set SPORTMONKS_API_TOKEN in .env.local');
@@ -67,6 +174,36 @@ async function main() {
     process.exit(1);
   }
 
+  const leagues = await listAvailableLeagues(apiToken);
+  if (leagues.length === 0) {
+    console.error('ERROR: No leagues available on your Sportmonks plan.');
+    process.exit(1);
+  }
+
+  console.log('Available leagues:', leagues.map((l) => `${l.id}=${l.name}`).join(', '));
+
+  const league = await resolveLeague(apiToken, leagues, preferredLeagueId);
+  if (!league) {
+    console.error(
+      'ERROR: No squad data available on your Sportmonks plan. CricAPI sync (Phase 9) will replace this importer.'
+    );
+    process.exit(1);
+  }
+
+  console.log(`Using league ${league.id} (${league.name}), season ${league.season_id}`);
+
+  const teams = (await discoverTeams(apiToken, league.id)).filter(
+    (t) => t.name !== 'TBC' && !t.name?.startsWith('TBD')
+  );
+  if (teams.length === 0) {
+    console.error(
+      `ERROR: No teams found for league ${league.id}. Try SPORTMONKS_LEAGUE_ID=5 (BBL) or check your plan.`
+    );
+    process.exit(1);
+  }
+
+  console.log(`Discovered ${teams.length} teams from fixtures.`);
+
   const client = new Client({
     connectionString,
     ssl: process.env.DATABASE_SSL === 'false' ? false : { rejectUnauthorized: false },
@@ -75,15 +212,25 @@ async function main() {
   await client.connect();
   let inserted = 0;
   let updated = 0;
+  let skippedTeams = 0;
 
   try {
-    for (const team of IPL_TEAMS) {
-      console.log(`Fetching ${team.name}…`);
+    for (const team of teams) {
+      const seasonId = team.seasonId || league.season_id;
+      console.log(`Fetching ${team.name} (team ${team.id}, season ${seasonId})…`);
+
       let squad;
       try {
-        squad = await fetchSquad(apiToken, team.id);
+        squad = await fetchSquad(apiToken, team.id, seasonId);
       } catch (err) {
         console.warn(`  Skipped: ${err.message}`);
+        skippedTeams += 1;
+        continue;
+      }
+
+      if (squad.length === 0) {
+        console.warn(`  Skipped: empty squad`);
+        skippedTeams += 1;
         continue;
       }
 
@@ -93,6 +240,12 @@ async function main() {
 
         const role = mapRole(player.position || player.role);
         const price = defaultPrice(role);
+        const country = player.country?.name || player.nationality || '';
+        const isOverseas = country
+          ? !String(country).toLowerCase().includes('australia') &&
+            !String(country).toLowerCase().includes('india') &&
+            !String(country).toLowerCase().includes('south africa')
+          : false;
 
         const upsert = await client.query(
           `INSERT INTO players (
@@ -115,7 +268,7 @@ async function main() {
             role,
             team.id,
             team.name,
-            Boolean(player.nationality && !String(player.nationality).toLowerCase().includes('india')),
+            isOverseas,
             player.image_path || null,
           ]
         );
@@ -145,7 +298,14 @@ async function main() {
       [DEFAULT_LEAGUE_ID]
     );
 
-    console.log(`Seed OK — ${rows[0].count} players in pool (${inserted} new, ${updated} updated).`);
+    if (rows[0].count === 0) {
+      console.error('ERROR: 0 players seeded. Check Sportmonks plan and SPORTMONKS_LEAGUE_ID.');
+      process.exit(1);
+    }
+
+    console.log(
+      `Seed OK — ${rows[0].count} players in pool (${inserted} new, ${updated} updated, ${skippedTeams} teams skipped).`
+    );
   } finally {
     await client.end();
   }

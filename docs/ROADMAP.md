@@ -41,7 +41,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] Budget deduct/refund on assign/clear
 - [x] Squad builder UI at `/squad`
 - [x] Player pool seed script (`scripts/seed-players.js`)
-- [ ] Run seed locally and verify squad builder
+- [x] Run seed locally and verify squad builder
 
 ## Phase 5 — League format (`feature/05-league-h2h`)
 
@@ -108,6 +108,16 @@ Playoff bracket UI.
 - My Team (squad, C/VC, points)
 - Trade history
 - Player stats / history
+
+## Phase 13 — Player pool insights (`feature/13-player-pool-stats`)
+
+Tournament-aware player cards in the squad builder / free-agent pool:
+
+- [ ] Season-to-date stats per player (runs, wickets, fantasy pts, matches played)
+- [ ] Form badge: **In form** / **Average** / **Out of form** (derived from recent scores vs season baseline)
+- [ ] Sort pool by form, price, role, franchise
+- [ ] Data from score sync (depends on Phase 8 scoring + Phase 9 live data)
+- [ ] Show on `/squad` player pool rows and future Free Agents page
 
 ---
 

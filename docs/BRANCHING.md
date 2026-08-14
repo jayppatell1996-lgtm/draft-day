@@ -8,8 +8,8 @@
 | `feature/01-foundation` | Project docs, env template, naming, upstream wiring | Done (merged) |
 | `feature/02-auth-nextauth` | Email login, bcrypt, team name signup, admin flag | Done (merged, `v0.2.0-auth`) |
 | `feature/03-database-schema` | League, teams, squads, rounds, config tables | Done (merged, `v0.3.0-schema`) |
-| `feature/04-salary-cap-squad` | 120-credit cap, 12+4 squad builder, role slots | **Active** |
-| `feature/05-league-h2h` | 12-team H2H, round-robin fixtures, standings | Planned |
+| `feature/04-salary-cap-squad` | 120-credit cap, 12+4 squad builder, role slots | Done (pending merge, `v0.4.0-squad`) |
+| `feature/05-league-h2h` | 12-team H2H, round-robin fixtures, standings | **Next** |
 | `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | Planned |
 | `feature/07-auto-sub` | Bench auto-sub when playing XI don't feature | Planned |
 | `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Planned |
@@ -17,6 +17,7 @@
 | `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | Planned |
 | `feature/11-admin-panel` | Configurable squad rules, manual sync triggers | Planned |
 | `feature/12-ui-pages` | Free agents, My Team, matchups, trade history | Planned |
+| `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | Planned |
 
 ## Workflow
 
