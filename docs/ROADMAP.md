@@ -24,16 +24,15 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 ## Phase 3 — Data model (`feature/03-database-schema`)
 
-Core tables (Postgres via Supabase or direct Prisma):
-
-- `leagues`, `fantasy_teams`, `users`
-- `players`, `player_prices` (variable pricing)
-- `squads`, `squad_slots` (playing vs bench)
-- `rounds`, `fixtures`, `h2h_matchups`
-- `transfers`, `trade_log`
-- `squad_structure_config` (admin-editable: 5 BAT / 5 BOWL / 1 WK / 1 FLEX)
-- `lock_times` (per IPL team per match)
-
+- [x] SQL migration: `20250815_league_core_schema.sql`
+- [x] `leagues`, `fantasy_teams` (+ league link), `league_users` (auth)
+- [x] `players`, `player_prices` (variable pricing)
+- [x] `squads`, `squad_slots` (playing vs bench)
+- [x] `rounds`, `fixtures`, `h2h_matchups`
+- [x] `transfers`, `trade_log`
+- [x] `squad_structure_config` (admin-editable: 5 BAT / 5 BOWL / 1 WK / 1 FLEX)
+- [x] `lock_times` (per franchise per real fixture)
+- [x] Run migration locally (`scripts/migrate-league-schema.js`)
 ## Phase 4 — Salary cap & squad (`feature/04-salary-cap-squad`)
 
 - 120-credit salary cap

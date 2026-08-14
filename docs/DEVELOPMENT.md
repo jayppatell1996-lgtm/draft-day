@@ -25,6 +25,14 @@ Open [http://localhost:3000](http://localhost:3000).
 
 Before first signup, run `supabase/migrations/20250814_nextauth_users_teams.sql` in the Supabase SQL editor (or via Supabase CLI).
 
+After auth is working, apply the league schema:
+
+```powershell
+node --env-file=.env.local scripts/migrate-league-schema.js
+```
+
+See [DATABASE.md](./DATABASE.md) for full migration order and table reference.
+
 Generate a NextAuth secret:
 
 ```powershell

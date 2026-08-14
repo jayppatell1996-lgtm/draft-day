@@ -21,9 +21,9 @@ Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://gi
 | Item | Status |
 |------|--------|
 | Base fork + git structure | Done (`main`, tagged `v0.1.0-foundation`) |
-| Docs: ROADMAP, BRANCHING, ARCHITECTURE, UPSTREAM, DEVELOPMENT | Done |
-| **Next work** | `feature/03-database-schema` |
-| Auth | **NextAuth + bcrypt (cost 12)** — done on `feature/02-auth-nextauth` |
+| Auth (NextAuth + bcrypt) | Done (merged `main`, tagged `v0.2.0-auth`) |
+| Docs: ROADMAP, BRANCHING, ARCHITECTURE, UPSTREAM, DEVELOPMENT, DATABASE | Done |
+| **Next work** | `feature/03-database-schema` (migration written; run locally) |
 | Data | Upstream uses Sportmonks → plan **CricAPI** in phase 09 |
 
 Before coding, read `docs/BRANCHING.md` for the active feature branch and dependency order.
@@ -44,7 +44,7 @@ Before coding, read `docs/BRANCHING.md` for the active feature branch and depend
 4. Never commit `.env.local` or API keys.
 5. Only create git commits when the user asks.
 
-Feature branches (in order): `01-foundation` ✓ → `02-auth-nextauth` → `03-database-schema` → `04-salary-cap-squad` → `05-league-h2h` → `06-transfers-locks` → `07-auto-sub` → `08-scoring-engine` → `09-live-score-sync` → `10-playoffs` → `11-admin-panel` → `12-ui-pages`.
+Feature branches (in order): `01-foundation` ✓ → `02-auth-nextauth` ✓ → `03-database-schema` → `04-salary-cap-squad` → `05-league-h2h` → `06-transfers-locks` → `07-auto-sub` → `08-scoring-engine` → `09-live-score-sync` → `10-playoffs` → `11-admin-panel` → `12-ui-pages`.
 
 ## Product rules (do not drift)
 
@@ -78,6 +78,7 @@ Summarized here; full detail in [reference.md](reference.md) and `docs/ROADMAP.m
 | `docs/DEVELOPMENT.md` | Local setup |
 | `pages/api/` | Existing API routes (selections, locks, leaderboard) |
 | `supabase/migrations/` | SQL migrations |
+| `docs/DATABASE.md` | Schema reference + migration order |
 
 ## When starting a new chat
 
