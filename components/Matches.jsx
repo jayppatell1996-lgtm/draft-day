@@ -1,39 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { supabase } from '../lib/supabaseClient';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 export default function Matches() {
   const router = useRouter();
-  const [checkingAuth, setCheckingAuth] = useState(true);
   const [yesterdayFixtures, setYesterdayFixtures] = useState([]);
   const [todayFixtures, setTodayFixtures] = useState([]);
   const [tomorrowFixtures, setTomorrowFixtures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // Check authentication on mount
-  useEffect(() => {
-    let mounted = true;
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'INITIAL_SESSION') {
-        if (!session && mounted) {
-          router.replace('/login');
-        }
-        setCheckingAuth(false);
-      } else if (event === 'SIGNED_OUT' && mounted) {
-        router.replace('/login');
-      }
-    });
-    return () => {
-      mounted = false;
-      data.subscription.unsubscribe();
-    };
-  }, [router]);
+  const [error, setError] = useState('');
 
   // Fetch fixtures from our proxy API
   useEffect(() => {
-    if (checkingAuth) return;
     async function fetchFixtures() {
       try {
         setLoading(true);
@@ -73,9 +53,7 @@ export default function Matches() {
       }
     }
     fetchFixtures();
-  }, [checkingAuth]);
-
-  if (checkingAuth) return null;
+  }, []);
 
   // Helper for rendering static fixture cards (yesterday and tomorrow)
   const renderStaticFixtureCard = (fixture) => (
@@ -126,6 +104,8 @@ export default function Matches() {
 
   // TodayMatchCard: Handles interactive player selection for today's fixtures
   function TodayMatchCard({ fixture }) {
+    const { data: session } = useSession();
+    const currentUser = session?.user ? { id: session.user.id } : null;
     const [userSelection, setUserSelection] = useState(null);
     const [loadingSelection, setLoadingSelection] = useState(true);
     const [errorSelection, setErrorSelection] = useState("");
@@ -135,7 +115,6 @@ export default function Matches() {
     const [visitorSelected, setVisitorSelected] = useState([]);
     const [submitting, setSubmitting] = useState(false);
     const [squadLoaded, setSquadLoaded] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null);
     const [isLocked, setIsLocked] = useState(new Date() >= new Date(fixture.starting_at));
     const [overrideEnabled, setOverrideEnabled] = useState(false);
     const [summary, setSummary] = useState('');
@@ -160,29 +139,17 @@ export default function Matches() {
       }
     };
 
-    // Fetch current user from Supabase client
+    // Keep lock status in sync with fixture start time
     useEffect(() => {
-      async function fetchUser() {
-        const { data: { user } } = await supabase.auth.getUser();
-        setCurrentUser(user || null);
+      const checkLockStatus = () => {
+        const currentlyLocked = new Date() >= new Date(fixture.starting_at);
+        setIsLocked(currentlyLocked);
+      };
 
-        // Make isLocked reactive
-        const checkLockStatus = () => {
-          const currentlyLocked = new Date() >= new Date(fixture.starting_at);
-          if (currentlyLocked !== isLockedRef.current) {
-            setIsLocked(currentlyLocked);
-            isLockedRef.current = currentlyLocked; // Keep ref in sync
-          }
-        };
-
-        const isLockedRef = { current: new Date() >= new Date(fixture.starting_at) }; // Use a ref to avoid stale closure in interval
-        setIsLocked(isLockedRef.current); // Initial set
-
-        const intervalId = setInterval(checkLockStatus, 30000); // Check every 30 seconds
-        return () => clearInterval(intervalId);
-      }
-      fetchUser();
-    }, [fixture.starting_at]); // Dependency on fixture.starting_at
+      checkLockStatus();
+      const intervalId = setInterval(checkLockStatus, 30000);
+      return () => clearInterval(intervalId);
+    }, [fixture.starting_at]);
 
     // Check if user already submitted selection for this fixture
     useEffect(() => {

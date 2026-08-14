@@ -15,12 +15,12 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 ## Phase 2 — Auth (`feature/02-auth-nextauth`)
 
-- Email + password signup and login
-- Team name at signup (2–30 chars, unique)
-- bcrypt hashing (cost 12)
-- NextAuth session: `teamId`, `teamName`, `isAdmin`
-- First registered user → admin
-- Protected routes → redirect to login
+- [x] Email + password signup and login
+- [x] Team name at signup (2–30 chars, unique)
+- [x] bcrypt hashing (cost 12)
+- [x] NextAuth session: `teamId`, `teamName`, `isAdmin`
+- [x] First registered user → admin
+- [x] Protected routes → redirect to login
 
 ## Phase 3 — Data model (`feature/03-database-schema`)
 

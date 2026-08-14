@@ -22,8 +22,8 @@ Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://gi
 |------|--------|
 | Base fork + git structure | Done (`main`, tagged `v0.1.0-foundation`) |
 | Docs: ROADMAP, BRANCHING, ARCHITECTURE, UPSTREAM, DEVELOPMENT | Done |
-| **Next work** | `feature/02-auth-nextauth` |
-| Auth | Upstream uses Supabase Auth → migrate to **NextAuth + bcrypt (cost 12)** |
+| **Next work** | `feature/03-database-schema` |
+| Auth | **NextAuth + bcrypt (cost 12)** — done on `feature/02-auth-nextauth` |
 | Data | Upstream uses Sportmonks → plan **CricAPI** in phase 09 |
 
 Before coding, read `docs/BRANCHING.md` for the active feature branch and dependency order.

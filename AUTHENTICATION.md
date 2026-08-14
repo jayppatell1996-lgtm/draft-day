@@ -1,71 +1,71 @@
 # Authentication & Account Management
 
-This document explains how authentication and account management are handled in the Fantasy Cricket app.
+Authentication uses **NextAuth.js** with a **Credentials** provider (email + password). Passwords are hashed with **bcrypt** (cost factor **12**).
 
 ---
 
-## Sign Up
-- Users register with **email, password, and full name**.
-- The `full_name` is stored in Supabase Auth as user metadata.
-- **Do not** manually insert into the `users` table after signup.
+## Sign up
 
-## User Profile Creation
-- A **Supabase trigger** automatically creates a row in the `users` table after signup.
-- The trigger extracts `full_name` from the metadata and stores it in the profile.
+1. User submits **team name** (2–30 characters, unique), **email**, and **password** (min 8 characters).
+2. `POST /api/auth/signup` creates a row in `fantasy_teams` and `league_users`.
+3. The **first registered user** is automatically assigned `is_admin = true`.
+4. Client signs in via NextAuth credentials and redirects to `/matches`.
 
-### Example Trigger
-```sql
-create or replace function public.handle_new_user()
-returns trigger as $$
-begin
-  insert into public.users (id, email, full_name, created_at)
-  values (
-    new.id,
-    new.email,
-    coalesce(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', new.email),
-    now()
-  );
-  return new;
-end;
-$$ language plpgsql security definer;
+## Log in
 
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-after insert on auth.users
-for each row execute procedure public.handle_new_user();
+- `signIn('credentials', { email, password })` via NextAuth.
+- Session is JWT-based (30-day max age).
+
+## Session fields
+
+Available on `session.user`:
+
+| Field | Description |
+|-------|-------------|
+| `id` | User UUID |
+| `email` | Normalized email |
+| `teamId` | Fantasy team UUID |
+| `teamName` | Unique team display name |
+| `isAdmin` | Admin flag |
+
+## Protected routes
+
+`components/AuthGate.jsx` wraps all pages except `/login`. Unauthenticated users are redirected to `/login`.
+
+## Log out & delete account
+
+- **Logout:** NextAuth `signOut()` from the Navbar modal.
+- **Delete account:** `POST /api/delete-account` (session cookie) deletes `league_users` and the linked `fantasy_teams` row, then signs out.
+
+---
+
+## Database setup
+
+Run the migration against your Postgres database (Supabase SQL editor or CLI):
+
+```
+supabase/migrations/20250814_nextauth_users_teams.sql
 ```
 
----
+Tables:
 
-## Log Out & Delete Account
-- The **Navbar** provides a modal popup with options to log out or delete the account.
-- **Delete Account** removes the user from `auth.users` and triggers a cascade delete of all related data.
-
-### Cascade Delete Trigger
-```sql
-create or replace function public.handle_user_delete()
-returns trigger as $$
-begin
-  delete from public.weekly_leaderboard where user_id = old.id;
-  delete from public.league_leaderboard where user_id = old.id;
-  delete from public.player_selections where user_id = old.id;
-  delete from public.users where id = old.id;
-  return old;
-end;
-$$ language plpgsql security definer;
-
-drop trigger if exists on_auth_user_deleted on auth.users;
-create trigger on_auth_user_deleted
-after delete on auth.users
-for each row execute procedure public.handle_user_delete();
-```
+- `fantasy_teams` — unique team names
+- `league_users` — email, password hash, team link, admin flag
 
 ---
 
-## Security Notes
-- **Service Role Key** is only used server-side (never exposed to the browser).
-- All sensitive actions (like account deletion) are handled via Next.js API routes.
+## Environment variables
+
+See `.env.example`. Required for auth:
+
+- `NEXTAUTH_URL`
+- `NEXTAUTH_SECRET`
+- `DATABASE_URL`
+
+Supabase keys remain required for match/fixture APIs until those are migrated.
 
 ---
 
-For additional details, see the main `README.md` or contact the maintainers.
+## Legacy Supabase Auth
+
+The upstream Supabase Auth flow (`supabase.auth.signInWithPassword`, OAuth) has been replaced. The old `/api/auth-credentials` route is deprecated.

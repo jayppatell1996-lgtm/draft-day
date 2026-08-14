@@ -6,8 +6,8 @@
 |--------|---------|--------|
 | `main` | Stable, merge-ready code only | Active |
 | `feature/01-foundation` | Project docs, env template, naming, upstream wiring | Done (merged) |
-| `feature/02-auth-nextauth` | Email login, bcrypt, team name signup, admin flag | **Next** |
-| `feature/03-database-schema` | League, teams, squads, rounds, config tables | Planned |
+| `feature/02-auth-nextauth` | Email login, bcrypt, team name signup, admin flag | Done (pending merge) |
+| `feature/03-database-schema` | League, teams, squads, rounds, config tables | **Next** |
 | `feature/04-salary-cap-squad` | 120-credit cap, 12+4 squad builder, role slots | Planned |
 | `feature/05-league-h2h` | 12-team H2H, round-robin fixtures, standings | Planned |
 | `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | Planned |

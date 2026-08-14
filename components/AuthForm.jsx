@@ -1,45 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { supabase } from '../lib/supabaseClient';
+import { signIn } from 'next-auth/react';
+import { validateEmail, validatePassword, validateTeamName } from '../lib/authValidation';
 
 export default function AuthForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState('login'); // 'login' or 'signup'
-  
-  // Form fields
-  const [fullName, setFullName] = useState('');
+  const [mode, setMode] = useState('login');
+
+  const [teamName, setTeamName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
 
-  // Validate email format
-  const validateEmail = (emailValue) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(emailValue)) {
-      setAuthError('Please enter a valid email address');
-      return false;
-    }
-    setAuthError('');
-    return true;
-  };
-
   const handleLogin = async () => {
     setAuthError('');
-    if (!email || !password) {
-      setAuthError('Please enter both email and password');
+    const emailResult = validateEmail(email);
+    if (!emailResult.ok) {
+      setAuthError(emailResult.error);
       return;
     }
-    if (!validateEmail(email)) return;
+    if (!password) {
+      setAuthError('Please enter your password');
+      return;
+    }
+
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      console.log('[AuthForm] Client-side login result:', data, error);
-      if (error) throw error;
-      // Optionally, you can log the login event via API route here
+      const result = await signIn('credentials', {
+        email: emailResult.value,
+        password,
+        redirect: false,
+      });
+      if (result?.error) {
+        setAuthError('Invalid email or password');
+        return;
+      }
       router.push('/matches');
-    } catch (error) {
-      setAuthError(error.message || 'Error logging in. Please try again.');
+    } catch {
+      setAuthError('Error logging in. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -47,44 +46,59 @@ export default function AuthForm() {
 
   const handleSignUp = async () => {
     setAuthError('');
-    if (!fullName || !email || !password) {
-      alert('Please fill in all required fields');
+
+    const teamResult = validateTeamName(teamName);
+    if (!teamResult.ok) {
+      setAuthError(teamResult.error);
       return;
     }
-    if (!validateEmail(email)) return;
+
+    const emailResult = validateEmail(email);
+    if (!emailResult.ok) {
+      setAuthError(emailResult.error);
+      return;
+    }
+
+    const passwordResult = validatePassword(password);
+    if (!passwordResult.ok) {
+      setAuthError(passwordResult.error);
+      return;
+    }
+
     setLoading(true);
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName } }
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          teamName: teamResult.value,
+          email: emailResult.value,
+          password: passwordResult.value,
+        }),
       });
-      console.log('[AuthForm] Client-side signup result:', data, error);
-      if (error) throw error;
-      // No need to call API to create user profile, trigger will handle it
+      const data = await res.json();
+      if (!res.ok) {
+        setAuthError(data.message || 'Could not create account');
+        return;
+      }
+
+      const login = await signIn('credentials', {
+        email: emailResult.value,
+        password: passwordResult.value,
+        redirect: false,
+      });
+      if (login?.error) {
+        setAuthError('Account created but login failed. Please sign in.');
+        setMode('login');
+        return;
+      }
       router.push('/matches');
-    } catch (error) {
-      setAuthError(error.message || 'Error signing up. Please try again.');
+    } catch {
+      setAuthError('Error signing up. Please try again.');
     } finally {
       setLoading(false);
     }
   };
-
-  // TODO: For OAuth, use Supabase client directly
-  const handleOAuth = async (provider) => {
-    setLoading(true);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({ provider });
-      if (error) throw error;
-      // The user will be redirected by Supabase
-    } catch (error) {
-      setAuthError(error.message || 'OAuth error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
 
   return (
     <div className="w-full max-w-md bg-navy-100/10 backdrop-blur-md p-8 rounded-xl shadow-2xl">
@@ -94,7 +108,6 @@ export default function AuthForm() {
         </div>
       )}
       <div>
-        {/* Form Type Selector */}
         <div className="flex justify-center space-x-8 mb-8">
           <button
             onClick={() => setMode('login')}
@@ -118,20 +131,20 @@ export default function AuthForm() {
           </button>
         </div>
 
-        {/* Smooth fade transition between Login and Sign Up forms */}
         <div className="w-full">
           <div key={mode} className="fade-transition">
             {mode === 'signup' ? (
               <div>
-                {/* Sign Up Form */}
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-white mb-1">Full Name*</label>
+                    <label className="block text-sm font-medium text-white mb-1">Team Name*</label>
                     <input
                       type="text"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
+                      value={teamName}
+                      onChange={(e) => setTeamName(e.target.value)}
+                      maxLength={30}
                       required
+                      placeholder="2–30 characters"
                       className="w-full px-4 py-3 bg-navy-100/20 border border-navy-200/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-navy-200/50"
                     />
                   </div>
@@ -152,6 +165,7 @@ export default function AuthForm() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      minLength={8}
                       className="w-full px-4 py-3 bg-navy-100/20 border border-navy-200/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-navy-200/50"
                     />
                   </div>
@@ -163,20 +177,9 @@ export default function AuthForm() {
                 >
                   {loading ? 'Signing Up...' : 'Sign Up'}
                 </button>
-                <div className="mt-6 flex flex-col gap-3">
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-navy-100/20 border border-navy-200/30 rounded-lg text-white hover:bg-navy-100/30"
-                    onClick={() => handleOAuth('google')}
-                  >
-                    <img src="/images/google.svg" alt="Google" className="w-5 h-5" />
-                    Sign up with Google
-                  </button>
-                </div>
               </div>
             ) : (
               <div>
-                {/* Login Form */}
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-medium text-white mb-1">Email*</label>
@@ -206,16 +209,6 @@ export default function AuthForm() {
                 >
                   {loading ? 'Logging In...' : 'Login'}
                 </button>
-                <div className="mt-6 flex flex-col gap-3">
-                  <button
-                    type="button"
-                    className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-navy-100/20 border border-navy-200/30 rounded-lg text-white hover:bg-navy-100/30"
-                    onClick={() => handleOAuth('google')}
-                  >
-                    <img src="/images/google.svg" alt="Google" className="w-5 h-5" />
-                    Log in with Google
-                  </button>
-                </div>
               </div>
             )}
           </div>

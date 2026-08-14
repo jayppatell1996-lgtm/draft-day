@@ -2,17 +2,20 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function Navbar() {
   const router = useRouter();
+  const { data: session } = useSession();
+  const teamName = session?.user?.teamName;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
+
   // Function to determine if a link is active
   const isActive = (path) => {
-  return router.pathname === path
-    ? 'text-navy-600 font-bold bg-navy-200'
-    : 'text-navy-600 hover:text-navy-800';
-};
+    return router.pathname === path
+      ? 'text-navy-600 font-bold bg-navy-200'
+      : 'text-navy-600 hover:text-navy-800';
+  };
   
   // Check if current page is login page
   const isLoginPage = router.pathname === '/login';
@@ -49,34 +52,21 @@ export default function Navbar() {
   const handleLogout = async () => {
     setShowLogoutModal(false);
     try {
-      await import('../lib/supabaseClient').then(({ supabase }) => supabase.auth.signOut());
-      router.push('/login');
+      await signOut({ callbackUrl: '/login' });
     } catch (error) {
       console.error('Error logging out:', error.message);
     }
   };
 
-  // Delete account and logout
   const handleDeleteAccount = async () => {
     setDeletingAccount(true);
     try {
-      // Get JWT from localStorage/session (Supabase client)
-      const { supabase } = await import('../lib/supabaseClient');
-      const session = supabase.auth.getSession && (await supabase.auth.getSession()).data.session;
-      const token = session?.access_token;
-      if (!token) throw new Error('No session token found');
-
-      const res = await fetch('/api/delete-account', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
+      const res = await fetch('/api/delete-account', { method: 'POST' });
       if (!res.ok) {
         const err = await res.json();
         throw new Error(err.message || 'Failed to delete account');
       }
-      // After deletion, sign out
-      await supabase.auth.signOut();
-      router.push('/login');
+      await signOut({ callbackUrl: '/login' });
     } catch (error) {
       alert('Error deleting account: ' + (error.message || error));
     } finally {
@@ -106,6 +96,12 @@ export default function Navbar() {
         </div>
         
         <div className="flex items-center text-navy-600">
+          {!isLoginPage && teamName && (
+            <span className="hidden md:inline text-sm font-semibold text-navy-700 mr-4 truncate max-w-[10rem]">
+              {teamName}
+              {session?.user?.isAdmin ? ' (Admin)' : ''}
+            </span>
+          )}
           {!isLoginPage && (
             <div className="hidden md:flex items-center space-x-6 mr-6">
               <Link href="/matches">

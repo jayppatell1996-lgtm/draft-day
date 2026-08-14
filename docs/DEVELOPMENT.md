@@ -21,6 +21,16 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+### Auth database migration
+
+Before first signup, run `supabase/migrations/20250814_nextauth_users_teams.sql` in the Supabase SQL editor (or via Supabase CLI).
+
+Generate a NextAuth secret:
+
+```powershell
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
 ## Verify base app (feature/01-foundation checklist)
 
 - [ ] `npm install` completes without errors
