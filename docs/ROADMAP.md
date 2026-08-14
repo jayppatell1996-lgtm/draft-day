@@ -35,11 +35,13 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] Run migration locally (`scripts/migrate-league-schema.js`)
 ## Phase 4 — Salary cap & squad (`feature/04-salary-cap-squad`)
 
-- 120-credit salary cap
-- 16-player squad: 12 playing + 4 bench
-- Role validation (AR fills BAT or BOWL slots)
-- Budget deduct/refund on swap
-- Squad builder UI (from scratch)
+- [x] 120-credit salary cap enforcement
+- [x] 16-player squad: 12 playing + 4 bench (auto-init slots)
+- [x] Role validation (AR fills BAT or BOWL slots)
+- [x] Budget deduct/refund on assign/clear
+- [x] Squad builder UI at `/squad`
+- [x] Player pool seed script (`scripts/seed-players.js`)
+- [ ] Run seed locally and verify squad builder
 
 ## Phase 5 — League format (`feature/05-league-h2h`)
 

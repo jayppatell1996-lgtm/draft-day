@@ -33,6 +33,12 @@ node --env-file=.env.local scripts/migrate-league-schema.js
 
 See [DATABASE.md](./DATABASE.md) for full migration order and table reference.
 
+Seed the player pool (required before squad builder):
+
+```powershell
+node --env-file=.env.local scripts/seed-players.js
+```
+
 Generate a NextAuth secret:
 
 ```powershell
