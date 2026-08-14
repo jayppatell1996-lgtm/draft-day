@@ -17,8 +17,7 @@ CREATE TABLE IF NOT EXISTS league_users (
   password_hash TEXT NOT NULL,
   team_id UUID NOT NULL REFERENCES fantasy_teams(id) ON DELETE CASCADE,
   is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  CONSTRAINT league_users_email_unique UNIQUE (lower(email))
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_league_users_email_lower ON league_users (lower(email));
+CREATE UNIQUE INDEX IF NOT EXISTS idx_league_users_email_lower ON league_users (lower(email));

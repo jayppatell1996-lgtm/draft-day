@@ -9,7 +9,7 @@ export default function Home() {
 
   useEffect(() => {
     if (status !== 'authenticated') return;
-    const timer = setTimeout(() => router.replace('/matches'), 2000);
+    const timer = setTimeout(() => router.replace('/matches'), 1200);
     return () => clearTimeout(timer);
   }, [status, router]);
 
@@ -18,30 +18,12 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-green-900 via-green-700 to-green-900">
-      <div className="bg-white/10 backdrop-blur-lg p-10 rounded-2xl shadow-2xl flex flex-col items-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          Welcome back{teamName ? `, ${teamName}` : ''}!
-        </h1>
-        <div className="flex flex-col items-center">
-          <svg
-            className="animate-spin h-8 w-8 text-green-200 mb-2"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-          </svg>
-          <p className="text-lg text-green-100">Redirecting to your matches...</p>
-        </div>
+    <div className="app-shell flex min-h-[calc(100vh-3.5rem)] items-center justify-center px-4">
+      <div className="surface-card px-8 py-10 text-center shadow-glow">
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">Welcome back</p>
+        <h1 className="mt-3 text-2xl font-semibold text-white">{teamName || 'Manager'}</h1>
+        <p className="mt-3 text-sm text-zinc-400">Opening your dashboard…</p>
+        <div className="mx-auto mt-6 h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-accent-500" />
       </div>
     </div>
   );

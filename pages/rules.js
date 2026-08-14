@@ -4,103 +4,45 @@ export default function Rules() {
   return (
     <>
       <Head>
-        <title>Rules | Fantasy Cricket</title>
-        <meta name="description" content="Rules and scoring system for Fantasy Cricket" />
+        <title>Rules | Cric Fantasy League</title>
+        <meta name="description" content="Rules and scoring system" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="min-h-screen relative">
-        <div
-          className="relative min-h-screen"
-          style={{
-            backgroundImage: 'url(/images/green-bg.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
-          <main className="relative z-10 container mx-auto px-4 py-12">
-            <div className="max-w-4xl mx-auto">
-              <div className="bg-black/40 backdrop-blur-md rounded-xl shadow-xl p-8 border border-navy-200/20">
-                <h1 className="text-4xl font-bold text-[#FFD700] mb-8 text-center text-shadow-sm">
-                  Rules & Scoring
-                </h1>
-
-                <div className="mb-12">
-                  <h2 className="text-[#FFD700] text-2xl font-bold mb-6 inline-block bg-black/50 px-6 py-2 rounded-lg text-shadow-sm">
-                    Getting Started
-                  </h2>
-                  <ul className="space-y-4 text-white">
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Jump in before each match and select your players for both teams.
-                      </span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">Selections cannot be done once the match starts.</span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Pick <b>4 players from each team</b> (8 total) — batsmen, bowlers, or all-rounders.
-                      </span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Once you are happy with your picks, submit to lock them in.
-                      </span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">After submission, your choices are final for that match.</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="mb-12">
-                  <h2 className="text-[#FFD700] text-2xl font-bold mb-6 inline-block bg-black/50 px-6 py-2 rounded-lg text-shadow-sm">
-                    Scoring System
-                  </h2>
-                  <ul className="space-y-4 text-white">
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Earn points based on your selected players&apos; batting and bowling performances.
-                      </span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Batting: <b>30 points</b> for 30 runs, <b>60 points</b> for 50 runs,{' '}
-                        <b>150 points</b> for 100 runs. 5 points per six.
-                      </span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Bowling: <b>30 points</b> for each wicket taken by your selected players.
-                      </span>
-                    </li>
-                    <li className="flex items-start space-x-3">
-                      <span className="text-[#FFD700] text-xl">•</span>
-                      <span className="font-medium">
-                        Track your score after the match on the Leaderboard.
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div className="max-w-4xl mx-auto mt-8">
-              <div className="text-center text-[#FFD700] text-base italic bg-black/50 rounded-lg px-6 py-4 shadow-md border border-[#FFD700]/30">
-                Note: Additional scoring rules and features will be introduced soon! Stay tuned for updates.
-              </div>
-            </div>
-          </main>
+      <div className="app-shell min-h-[calc(100vh-3.5rem)]">
+        <div className="border-b border-white/10 bg-surface-900/50">
+          <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">League guide</p>
+            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">Rules & scoring</h1>
+          </div>
         </div>
+
+        <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+          <div className="surface-card p-8">
+            <section className="mb-10">
+              <h2 className="text-lg font-semibold text-white">Getting started</h2>
+              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-zinc-400">
+                <li>Select players before each match starts.</li>
+                <li>Selections lock when the match begins.</li>
+                <li>Pick 4 players from each team (8 total).</li>
+                <li>Submit your lineup before lock — changes after that do not count.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-lg font-semibold text-white">Current scoring (upstream)</h2>
+              <ul className="mt-4 space-y-3 text-sm leading-relaxed text-zinc-400">
+                <li>Batting: 30 pts for 30 runs, 60 for 50, 150 for 100. 5 pts per six.</li>
+                <li>Bowling: 30 pts per wicket.</li>
+                <li>Full CPL rules will replace this in a later phase.</li>
+              </ul>
+            </section>
+          </div>
+
+          <p className="mt-6 text-center text-sm text-zinc-500">
+            Salary-cap squad rules, transfers, and H2H format are coming in upcoming releases.
+          </p>
+        </main>
       </div>
     </>
   );

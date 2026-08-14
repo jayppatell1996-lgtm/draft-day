@@ -21,6 +21,9 @@ export default function Matches() {
 
         const res = await fetch('/api/fixtures');
         const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.details || data.error || 'Failed to load fixtures');
+        }
         const fixtures = data.data || [];
         const today = new Date();
         const yesterday = new Date(today);
@@ -57,48 +60,34 @@ export default function Matches() {
 
   // Helper for rendering static fixture cards (yesterday and tomorrow)
   const renderStaticFixtureCard = (fixture) => (
-    <div
-      key={fixture.id}
-      className="bg-black/40 backdrop-blur-md rounded-3xl shadow-xl p-5 transform hover:scale-[1.005] transition-transform border border-navy-200/20 mb-6"
-    >
-      <h2 className="text-xs font-semibold mb-3 text-navy-100 text-shadow-sm text-navy-200">
-        {fixture.round || "Fixture"}
-      </h2>
-      <div className="flex items-center justify-between mb-4">
+    <div key={fixture.id} className="surface-card mb-4 p-4">
+      <p className="mb-3 text-xs font-medium uppercase tracking-wide text-zinc-500">
+        {fixture.round || 'Fixture'}
+      </p>
+      <div className="mb-4 flex items-center justify-between">
         <div className="text-center">
-          <p className="font-bold text-base text-white font-medium">
-            {fixture.localteam.name}
-          </p>
-          <div className="mt-3 bg-navy-800/50 w-16 h-16 mx-auto rounded-full flex items-center justify-center shadow-lg">
+          <p className="text-sm font-medium text-zinc-100">{fixture.localteam.name}</p>
+          <div className="mx-auto mt-3 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-surface-950">
             <img
               src={fixture.localteam.image_path}
               alt={fixture.localteam.name}
-              className="w-12 h-12 object-contain"
+              className="h-10 w-10 object-contain"
             />
           </div>
         </div>
-        <div className="flex flex-col items-center">
-          <p className="text-sm text-navy-200 font-medium">vs</p>
-          {/* <p className="font-sm text-white mt-2">
-            {new Date(fixture.starting_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-          </p> */}
-        </div>
+        <p className="text-xs font-medium uppercase tracking-wide text-zinc-500">vs</p>
         <div className="text-center">
-          <p className="font-bold text-base text-white font-medium">
-            {fixture.visitorteam.name}
-          </p>
-          <div className="mt-3 bg-navy-800/50 w-16 h-16 mx-auto rounded-full flex items-center justify-center shadow-lg">
+          <p className="text-sm font-medium text-zinc-100">{fixture.visitorteam.name}</p>
+          <div className="mx-auto mt-3 flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-surface-950">
             <img
               src={fixture.visitorteam.image_path}
               alt={fixture.visitorteam.name}
-              className="w-12 h-12 object-contain"
+              className="h-10 w-10 object-contain"
             />
           </div>
         </div>
       </div>
-      {fixture.note && (
-        <p className="text-navy-200 mt-3 font-medium text-sm text-center">{fixture.note}</p>
-      )}
+      {fixture.note && <p className="text-center text-sm text-zinc-400">{fixture.note}</p>}
     </div>
   );
 
@@ -375,7 +364,7 @@ export default function Matches() {
       }
     };
 
-    if (loadingSelection) return <div className="p-4 text-white"><p>Loading selection...</p></div>;
+    if (loadingSelection) return <div className="p-4 text-sm text-zinc-400">Loading selection…</div>;
     if (userSelection) {
       // Get player image paths from the squad data if available
       const getPlayerImagePath = (playerName, teamType) => {
@@ -385,8 +374,8 @@ export default function Matches() {
       };
       
       return (
-        <div className="p-2 text-white">
-          <div className="mb-4 p-4 bg-black/40 backdrop-blur-md rounded-3xl border border-navy-500/20">
+        <div className="mb-6 border-b border-white/10 pb-6 text-zinc-100">
+          <div className="mb-4 p-4 rounded-xl border border-white/10 bg-surface-900/80">
             <div className="flex items-center justify-between mb-3 p-2">
               <div className="text-center">
                 <p className="font-bold text-base text-white">{fixture.localteam.name}</p>
@@ -402,23 +391,23 @@ export default function Matches() {
             {loadingSummary ? <p className="text-white/70">Generating AI summary...</p> : errorSummary ? <p className="text-red-500">Error: {errorSummary}</p> : (
               <>
                 <div className={`text-white/90 break-words ${!showFullSummary ? 'max-h-28 overflow-hidden' : ''}`} dangerouslySetInnerHTML={{ __html: summary }} />
-                <button onClick={() => setShowFullSummary(prev => !prev)} className="text-blue-500 mt-2">
+                <button onClick={() => setShowFullSummary(prev => !prev)} className="mt-2 text-sm text-accent-400 hover:text-accent-300">
                   {showFullSummary ? 'Collapse full summary' : 'Show full summary'}
                 </button>
               </>
             )}
           </div>
-          <h4 className="text-lg font-semibold mb-4 text-shadow-sm">Your Selections</h4>
+          <h4 className="mb-4 text-lg font-semibold text-white">Your Selections</h4>
           
-          <div className="bg-black/40 backdrop-blur-sm rounded-3xl border border-navy-500/20 p-4 mb-4">
+          <div className="rounded-xl border border-white/10 bg-surface-900/80 p-4 mb-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {/* Local Team Selection */}
               <div>
-                <h4 className="font-semibold text-[#FFD700] mb-2">{fixture.localteam.name}</h4>
+                <h4 className="font-semibold text-accent-400 mb-2">{fixture.localteam.name}</h4>
                 <div className="flex flex-col space-y-2">
                   {userSelection.team_a_names?.map((playerName, index) => (
-                    <div key={index} className="flex items-center bg-navy-500/30 rounded-3xl p-2">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-navy-200/80 mr-3">
+                    <div key={index} className="flex items-center rounded-lg border border-white/10 bg-surface-950 p-2">
+                      <div className="mr-3 h-10 w-10 overflow-hidden rounded-full border border-white/10">
                         <img
                           src={getPlayerImagePath(playerName, 'local')} 
                           alt={playerName}
@@ -426,7 +415,7 @@ export default function Matches() {
                           onError={(e) => {e.target.src = '/images/player-placeholder.jpg'}}
                         />
                       </div>
-                      <span className="font-medium text-sm">{playerName}</span>
+                      <span className="text-sm font-medium text-zinc-200">{playerName}</span>
                     </div>
                   ))}
                 </div>
@@ -434,11 +423,11 @@ export default function Matches() {
               
               {/* Visitor Team Selection */}
               <div>
-                <h4 className="font-semibold text-[#FFD700] mb-2">{fixture.visitorteam.name}</h4>
+                <h4 className="font-semibold text-accent-400 mb-2">{fixture.visitorteam.name}</h4>
                 <div className="flex flex-col space-y-2">
                   {userSelection.team_b_names?.map((playerName, index) => (
-                    <div key={index} className="flex items-center bg-navy-500/30 rounded-3xl p-2">
-                      <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-navy-200/80 mr-3">
+                    <div key={index} className="flex items-center rounded-lg border border-white/10 bg-surface-950 p-2">
+                      <div className="mr-3 h-10 w-10 overflow-hidden rounded-full border border-white/10">
                         <img 
                           src={getPlayerImagePath(playerName, 'visitor')} 
                           alt={playerName}
@@ -446,7 +435,7 @@ export default function Matches() {
                           onError={(e) => {e.target.src = '/images/player-placeholder.jpg'}}
                         />
                       </div>
-                      <span className="font-medium">{playerName}</span>
+                      <span className="font-medium text-zinc-200">{playerName}</span>
                     </div>
                   ))}
                 </div>
@@ -454,16 +443,16 @@ export default function Matches() {
             </div>
           </div>
           
-          <p className="italic text-navy-200 text-center font-medium">Your selections are locked for this match.</p>
+          <p className="text-center text-sm italic text-zinc-500">Your selections are locked for this match.</p>
         </div>
       );
     }
-    if (!squadLoaded) return <div className="p-4 text-white"><p>Loading squads...</p></div>;
+    if (!squadLoaded) return <div className="p-4 text-sm text-zinc-400">Loading squads…</div>;
 
     const isSelectionAllowed = (!isLocked || overrideEnabled);
     return (
-      <div className="p-2 text-white">
-        <div className="mb-4 p-4 bg-black/40 backdrop-blur-md rounded-3xl border border-navy-500/20">
+      <div className="mb-6 border-b border-white/10 pb-6 text-zinc-100">
+        <div className="mb-4 p-4 rounded-xl border border-white/10 bg-surface-900/80">
           <div className="flex items-center justify-between mb-3">
             <div className="text-center">
               <p className="font-bold text-base text-white">{fixture.localteam.name}</p>
@@ -479,16 +468,16 @@ export default function Matches() {
           {loadingSummary ? <p className="text-white/70">Generating AI summary...</p> : errorSummary ? <p className="text-red-500">Error: {errorSummary}</p> : (
             <>
               <div className={`text-white/90 break-words ${!showFullSummary ? 'max-h-28 overflow-hidden' : ''}`} dangerouslySetInnerHTML={{ __html: summary }} />
-              <button onClick={() => setShowFullSummary(prev => !prev)} className="text-blue-500 mt-2">
+              <button onClick={() => setShowFullSummary(prev => !prev)} className="mt-2 text-sm text-accent-400 hover:text-accent-300">
                 {showFullSummary ? 'Collapse full summary' : 'Show full summary'}
               </button>
             </>
           )}
         </div>
-        {isSelectionAllowed && <h4 className="text-lg font-semibold mb-4 text-shadow-sm">Select Players for {fixture.round}</h4>}
+        {isSelectionAllowed && <h4 className="mb-4 text-lg font-semibold text-white">Select Players for {fixture.round}</h4>}
         
         {/* Local Team Section */}
-        <div className="mb-4 bg-black/40 backdrop-blur-sm rounded-3xl border border-white/10 overflow-hidden">
+        <div className="rounded-xl border border-white/10 bg-surface-900/80 overflow-hidden">
           <SquadSelector 
             teamName={fixture.localteam.name}
             squad={localSquad}
@@ -499,7 +488,7 @@ export default function Matches() {
         </div>
         
         {/* Visitor Team Section */}
-        <div className="mb-4 bg-black/40 backdrop-blur-sm rounded-3xl border border-white/10 overflow-hidden">
+        <div className="rounded-xl border border-white/10 bg-surface-900/80 overflow-hidden">
           <SquadSelector 
             teamName={fixture.visitorteam.name}
             squad={visitorSquad}
@@ -510,15 +499,15 @@ export default function Matches() {
         </div>
         
         {/* Selection Summary */}
-        <div className="mb-4 p-4 bg-black/40 backdrop-blur-sm rounded-3xl border border-navy-500/20">
-          <h4 className="font-semibold text-[#FFD700] mb-2 text-shadow-sm">Your Selections</h4>
+        <div className="mb-4 p-4 rounded-xl border border-white/10 bg-surface-900/80">
+          <h4 className="mb-2 font-semibold text-accent-400">Your Selections</h4>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <p className="text-sm text-white/80 mb-1 font-medium">{fixture.localteam.name}</p>
               {localSelected.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {localSelected.map(player => (
-                    <span key={player.id} className="inline-flex items-center bg-navy-500/50 px-2 py-1 rounded-full text-xs">
+                    <span key={player.id} className="inline-flex items-center rounded-full border border-accent-500/30 bg-accent-500/10 px-2 py-1 text-xs text-accent-200">
                       <img src={player.image_path} alt={player.fullname} className="w-5 h-5 mr-1 rounded-full object-cover" />
                       <span className="font-medium">{player.fullname}</span>
                     </span>
@@ -533,7 +522,7 @@ export default function Matches() {
               {visitorSelected.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
                   {visitorSelected.map(player => (
-                    <span key={player.id} className="inline-flex items-center bg-navy-500/50 px-2 py-1 rounded-full text-xs">
+                    <span key={player.id} className="inline-flex items-center rounded-full border border-accent-500/30 bg-accent-500/10 px-2 py-1 text-xs text-accent-200">
                       <img src={player.image_path} alt={player.fullname} className="w-5 h-5 mr-1 rounded-full object-cover" />
                       <span className="font-medium">{player.fullname}</span>
                     </span>
@@ -549,18 +538,18 @@ export default function Matches() {
         {isSelectionAllowed && <button
           onClick={handleSubmitSelection}
           disabled={submitting || (!overrideEnabled && isLocked) || localSelected.length !== 4 || visitorSelected.length !== 4}
-          className={`mt-4 w-full py-3 rounded-3xl transform hover:scale-[1.005] transition-all shadow-lg ${
+          className={`btn-primary mt-4 w-full ${
             localSelected.length === 4 && visitorSelected.length === 4 && (overrideEnabled || !isLocked)
-               ? 'bg-gradient-to-r from-navy-600 to-navy-700 text-white hover:from-navy-700 hover:to-navy-800'
-               : 'bg-gray-500/50 text-white/70 cursor-not-allowed'
-           }`}
+              ? ''
+              : 'cursor-not-allowed opacity-50'
+          }`}
         >
           {submitting ? 'Submitting...' : `Submit Selection (${localSelected.length + visitorSelected.length}/8)`}
         </button>}
         {!isSelectionAllowed && (
-          <div className="mt-4 p-3 bg-yellow-800/30 text-yellow-300 border border-yellow-700 rounded-3xl text-center">
+          <div className="mt-4 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-center text-sm text-amber-200">
             <p className="font-semibold">Player selection is locked as the match has started.</p>
-            {overrideEnabled && <p className="text-sm text-yellow-200 mt-1">Override active: You can make selections.</p>}
+            {overrideEnabled && <p className="mt-1 text-xs text-amber-300/80">Override active: selections unlocked.</p>}
             {/* {!overrideEnabled && <p className="text-sm text-yellow-200 mt-1">Selections will unlock if an admin override is activated.</p>} */}
           </div>
         )}
@@ -576,13 +565,13 @@ export default function Matches() {
     const [isExpanded, setIsExpanded] = useState(false); 
     
     return (
-      <div className="bg-navy-800/50 p-3 rounded-lg">
-        <button 
+      <div className="rounded-lg border border-white/10 bg-surface-950 p-3">
+        <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex justify-between items-center text-left text-white font-semibold py-2 px-1 rounded hover:bg-navy-700/70 transition-colors"
+          className="flex w-full items-center justify-between rounded-md px-1 py-2 text-left text-zinc-100 transition-colors hover:bg-white/5"
         >
           <div className="flex items-center">
-            <span className="font-semibold text-shadow-sm">{teamName}</span>
+            <span className="font-semibold">{teamName}</span>
             {isSelectionAllowed && <span className="ml-2 text-sm text-white/70 font-medium">
               {selectedPlayers.length}/4 selected
             </span>}
@@ -590,7 +579,7 @@ export default function Matches() {
           <div className="flex items-center">
             {/* Mini previews of selected players in collapsed header - keep if desired, or simplify */} 
             {!isExpanded && selectedPlayers.slice(0, 4).map(player => (
-              <img key={player.id} src={player.image_path} alt={player.fullname} className="w-5 h-5 rounded-full -ml-1 border-2 border-navy-800/50 object-cover" />
+              <img key={player.id} src={player.image_path} alt={player.fullname} className="-ml-1 h-5 w-5 rounded-full border border-white/20 object-cover" />
             ))}
             <span className={`ml-2 transform transition-transform duration-200 ${isExpanded ? 'rotate-180' : 'rotate-0'}`}>
               <svg width="12" height="12" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white/80"><path d="M13.0448 5.30836C12.9188 5.18236 12.742 5.11098 12.5588 5.11098C12.3755 5.11098 12.1988 5.18236 12.0728 5.30836L7.99976 9.3749L3.92676 5.30836C3.79956 5.18306 3.62256 5.11211 3.43976 5.1127C3.25696 5.11329 3.08056 5.18524 2.95476 5.31136C2.82896 5.43748 2.75919 5.61381 2.75919 5.79661C2.75919 5.97941 2.82896 6.15574 2.95476 6.28186L7.52076 10.8479C7.58338 10.9103 7.65706 10.9604 7.73816 10.9962C7.81926 11.032 7.90646 11.0529 7.99476 11.0579C8.08306 11.063 8.17206 11.0526 8.25656 11.0272C8.34106 11.0018 8.41956 10.962 8.48876 10.9099L13.0528 6.28186C13.1788 6.15586 13.2498 5.97904 13.2498 5.79586C13.2498 5.61267 13.1788 5.43586 13.0528 5.30986L13.0448 5.30836Z" fill="currentColor"/></svg>
@@ -609,12 +598,12 @@ export default function Matches() {
                 (!isSelectionAllowed && !playerIsSelected) || // Can't select new if locked and not already selected
                 (isSelectionAllowed && teamIsFull && !playerIsSelected); // Can't select new if team full & selection allowed & not selected
 
-              let buttonClasses = "px-2.5 py-1.5 rounded-full text-xs transition-all flex items-center focus:outline-none focus:ring-2 focus:ring-opacity-50 shadow ";
+              let buttonClasses = 'flex items-center rounded-full px-2.5 py-1.5 text-xs transition-colors focus:outline-none focus:ring-2 focus:ring-accent-500/20 ';
               
               if (playerIsSelected) {
-                buttonClasses += "bg-gradient-to-r from-green-500 to-emerald-600 text-white ring-green-300 scale-105 font-medium ";
+                buttonClasses += 'border border-accent-500/40 bg-accent-500/15 text-accent-300 ';
               } else {
-                buttonClasses += "bg-navy-600/70 text-navy-100 hover:bg-navy-500/80 ring-navy-500/60 ";
+                buttonClasses += 'border border-white/10 bg-surface-800 text-zinc-300 hover:bg-surface-700 ';
               }
 
               if (!isSelectionAllowed && !playerIsSelected) {
@@ -653,68 +642,52 @@ export default function Matches() {
   }
 
   return (
-    <div className="relative font-sans">
-      <div className="max-h-[60vh]">
-        <img
-          src="/images/game-banner.png"
-          alt="Game banner"
-          className="w-full object-cover"
-        />
-      </div>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      {loading ? (
+        <div className="flex min-h-[40vh] items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-accent-500" />
+        </div>
+      ) : (
+        <>
+          {error && (
+            <div className="mb-6 rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+              {error}
+            </div>
+          )}
 
-      {/* Main Content with bg1 background */}
-      <div 
-        className="w-full relative min-h-screen" 
-        style={{
-          backgroundImage: 'url(/images/green-bg.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <main className="relative z-10 container mx-auto px-2 py-4">
-          <section className="grid grid-cols-1 md:grid-cols-[1fr_3fr_1fr] gap-2 mb-4">
-              {/* Yesterday's Fixtures */}
-              <div className="bg-black/40 backdrop-blur-md rounded-3xl shadow-xl p-3 transform hover:scale-[1.005] transition-transform border border-burgundy-200/20">
-                <h2 className="text-lg font-semibold my-2 mx-3 text-burgundy-100 text-shadow-sm">Yesterday's Fixtures</h2>
-                {yesterdayFixtures.length > 0 
-                  ? yesterdayFixtures.map(fixture => renderStaticFixtureCard(fixture))
-                  : <p className="text-white font-medium">No fixtures found for yesterday.</p>
-                }
-              </div>
-
-            {/* Today's Fixtures - Full Width */}
-            <div className="bg-black/40 backdrop-blur-md rounded-3xl shadow-xl p-2 transform hover:scale-[1.005] transition-transform">
-              <h2 className="text-xl font-semibold text-navy-100 my-2 mx-3 text-shadow-sm">Today's Fixtures</h2>
-              {todayFixtures.length > 0 
-                ? todayFixtures.map(fixture => (
-                    <TodayMatchCard key={fixture.id} fixture={fixture}/>
-                  ))
-                : <p className="text-white font-medium">No fixtures found for today.</p>
-              }
+          <section className="mb-8 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)]">
+            <div className="surface-card p-4">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-400">Yesterday</h2>
+              {yesterdayFixtures.length > 0
+                ? yesterdayFixtures.map((fixture) => renderStaticFixtureCard(fixture))
+                : <p className="text-sm text-zinc-500">No fixtures yesterday.</p>}
             </div>
 
-            {/* Tomorrow's Fixtures */}
-            <div className="bg-black/40 backdrop-blur-md rounded-3xl shadow-xl p-3 transform hover:scale-[1.005] transition-transform border border-burgundy-200/20">
-                <h2 className="text-lg font-semibold my-2 mx-3 text-burgundy-100 text-shadow-sm">Tomorrow's Fixtures</h2>
-                {tomorrowFixtures.length > 0 
-                  ? tomorrowFixtures.map(fixture => renderStaticFixtureCard(fixture))
-                  : <p className="text-white font-medium">No fixtures found for tomorrow.</p>
-                }
-              </div>
+            <div className="surface-card p-4">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-accent-400">Today</h2>
+              {todayFixtures.length > 0
+                ? todayFixtures.map((fixture) => <TodayMatchCard key={fixture.id} fixture={fixture} />)
+                : <p className="text-sm text-zinc-500">No fixtures today.</p>}
+            </div>
+
+            <div className="surface-card p-4">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-400">Tomorrow</h2>
+              {tomorrowFixtures.length > 0
+                ? tomorrowFixtures.map((fixture) => renderStaticFixtureCard(fixture))
+                : <p className="text-sm text-zinc-500">No fixtures tomorrow.</p>}
+            </div>
           </section>
 
-          {/* Selection & Scoring Section */}
-          <div className="bg-black/40 backdrop-blur-md rounded-3xl shadow-xl p-6 mb-8 text-white">
-            <h2 className="text-xl font-semibold mb-4 text-shadow-sm">Selection & Scoring</h2>
-            <p className="mb-2">Select 4 players from each team (8 total) per match:</p>
-            <ul className="list-disc list-inside ml-4 space-y-1">
-              <li>Batting: 30 points for 30 runs, 60 points for half-century (50 runs), 150 points for century (100 runs), 5 points for each six hit</li>
-              <li>Bowling: 30 points per wicket taken</li>
+          <div className="surface-card p-6">
+            <h2 className="text-lg font-semibold text-white">Selection & scoring</h2>
+            <p className="mt-2 text-sm text-zinc-400">Select 4 players from each team (8 total) per match.</p>
+            <ul className="mt-4 space-y-2 text-sm text-zinc-400">
+              <li>Batting: 30 pts for 30 runs, 60 for 50, 150 for 100, 5 per six.</li>
+              <li>Bowling: 30 pts per wicket.</li>
             </ul>
           </div>
-        </main>
-      </div>
+        </>
+      )}
     </div>
   );
 }

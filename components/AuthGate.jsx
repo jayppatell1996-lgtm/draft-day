@@ -27,8 +27,8 @@ export default function AuthGate({ children }) {
       return children;
     }
     return (
-      <div className="flex min-h-[50vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-navy-400 border-t-transparent" />
+      <div className="app-shell flex min-h-[calc(100vh-3.5rem)] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-accent-500" />
       </div>
     );
   }

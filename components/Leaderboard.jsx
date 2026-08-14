@@ -145,52 +145,52 @@ export default function Leaderboard() {
         {/* Centered and wider leaderboard section */}
         <div className="order-1 max-w-4xl w-full lg:order-2">
           {/* Tabs */}
-          <div className="bg-navy-100 backdrop-blur-sm rounded-t-xl overflow-hidden">
+          <div className="overflow-hidden rounded-t-xl border border-white/10 bg-surface-900">
             <div className="flex">
               <button
-                className={`flex-1 py-4 font-semibold transition-colors duration-200 text-[11px] sm:text-base md:text-lg relative ${
+                className={`relative flex-1 py-4 text-[11px] font-semibold transition-colors sm:text-base md:text-lg ${
                   activeTab === 'daily'
-                    ? 'bg-navy-600 text-white font-bold shadow-[0_0_15px_rgba(0,0,139,0.7)]'
-                    : 'bg-navy-400 text-white/50 hover:text-white hover:bg-navy-500'
+                    ? 'bg-white/10 text-white'
+                    : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
                 }`}
                 onClick={() => setActiveTab('daily')}
               >
                 DAILY LEADERBOARD
                 {activeTab === 'daily' && (
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-[#FFD700]"></div>
+                  <div className="absolute bottom-0 left-0 h-0.5 w-full bg-accent-500"></div>
                 )}
               </button>
               <button
-                className={`flex-1 py-4 font-semibold transition-colors duration-200 text-[11px] sm:text-base md:text-lg relative ${
+                className={`relative flex-1 py-4 text-[11px] font-semibold transition-colors sm:text-base md:text-lg ${
                   activeTab === 'weekly'
-                    ? 'bg-navy-600 text-white font-bold shadow-[0_0_15px_rgba(0,0,139,0.7)]'
-                    : 'bg-navy-400 text-white/50 hover:text-white hover:bg-navy-500'
+                    ? 'bg-white/10 text-white'
+                    : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
                 }`}
                 onClick={() => setActiveTab('weekly')}
               >
                 WEEKLY LEADERBOARD
                 {activeTab === 'weekly' && (
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-[#FFD700]"></div>
+                  <div className="absolute bottom-0 left-0 h-0.5 w-full bg-accent-500"></div>
                 )}
               </button>
               <button
-                className={`flex-1 py-4 font-semibold transition-colors duration-200 text-[11px] sm:text-base md:text-lg relative ${
+                className={`relative flex-1 py-4 text-[11px] font-semibold transition-colors sm:text-base md:text-lg ${
                   activeTab === 'league'
-                    ? 'bg-navy-600 text-white font-bold shadow-[0_0_15px_rgba(0,0,139,0.7)]'
-                    : 'bg-navy-400 text-white/50 hover:text-white hover:bg-navy-500'
+                    ? 'bg-white/10 text-white'
+                    : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-200'
                 }`}
                 onClick={() => setActiveTab('league')}
               >
                 LEAGUE LEADERBOARD
                 {activeTab === 'league' && (
-                  <div className="absolute bottom-0 left-0 w-full h-1 bg-[#FFD700]"></div>
+                  <div className="absolute bottom-0 left-0 h-0.5 w-full bg-accent-500"></div>
                 )}
               </button>
             </div>
           </div>
 
           {/* Filter Input */}
-          <div className="bg-navy-500 backdrop-blur-sm p-4 border-t-0 border-x border-white/10">
+          <div className="border border-t-0 border-white/10 bg-surface-900 p-4">
             <div className="relative">
               <input
                 type="text"
@@ -202,7 +202,7 @@ export default function Leaderboard() {
                   setWeeklyPage(1);
                   setDailyPage(1);
                 }}
-                className="w-full px-4 py-2 bg-white/10 border border-white/30 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[#FFD700]/50"
+                className="input-dark"
               />
               {nameFilter && (
                 <button
@@ -221,7 +221,7 @@ export default function Leaderboard() {
           </div>
 
           {/* Content */}
-          <div className="bg-navy-500 backdrop-blur-sm rounded-b-xl p-6 border-t-0 border border-[#FFD700]/20">
+          <div className="rounded-b-xl border border-t-0 border-white/10 bg-surface-900 p-6">
             {activeTab === 'daily' && (
               <div>
                 {/* Date selector */}
@@ -238,7 +238,7 @@ export default function Leaderboard() {
                 <div className="relative">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#FFD700]/20">
+                      <tr className="border-b border-accent-500/20">
                         <th className="px-4 py-3 text-center font-semibold text-lg text-white w-1/4">Points</th>
                         <th className="px-4 py-3 text-left font-semibold text-lg text-white w-3/4">Name</th>
                       </tr>
@@ -297,7 +297,7 @@ export default function Leaderboard() {
                 <div className="relative">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#FFD700]/20">
+                      <tr className="border-b border-accent-500/20">
                         <th className="px-4 py-3 text-center font-semibold text-lg text-white w-1/4">Points</th>
                         <th className="px-4 py-3 text-left font-semibold text-lg text-white w-3/4">Name</th>
                       </tr>
@@ -341,7 +341,7 @@ export default function Leaderboard() {
               <div>
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-[#FFD700]/20">
+                    <tr className="border-b border-accent-500/20">
                       <th className="px-4 py-3 text-center font-semibold text-lg text-white w-1/4">Points</th>
                       <th className="px-4 py-3 text-left font-semibold text-lg text-white w-3/4">Name</th>
                     </tr>

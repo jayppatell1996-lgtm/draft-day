@@ -1,40 +1,15 @@
 import Leaderboard from '../components/Leaderboard';
-// import Navbar from '../components/Navbar';
-import Image from 'next/image';
 
 export default function LeaderboardPage() {
   return (
-    <div className="min-h-screen relative flex flex-col">
-      {/* Section 1: Navbar */}
-      {/* <Navbar /> */}
-      
-      {/* Section 2: Scoreboard Banner */}
-      <div className="relative w-full h-[200px] md:h-[300px]">
-        <Image
-          src="/images/leaderboard-banner.png"
-          alt="Scoreboard Banner"
-          layout="fill"
-          objectFit="cover"
-          objectPosition="center"
-          priority
-        />
-      </div>
-      
-      {/* Section 3: Leaderboard with Purple Gradient Background */}
-      <div 
-        className="flex-grow relative" 
-        style={{
-          background: 'linear-gradient(135deg, #14213d 0%, #25406a 50%, #4a6b93 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        {/* Content */}
-        <div className="relative z-10">
-          <Leaderboard />
+    <div className="app-shell min-h-[calc(100vh-3.5rem)]">
+      <div className="border-b border-white/10 bg-surface-900/50">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">Standings</p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">Leaderboard</h1>
         </div>
       </div>
+      <Leaderboard />
     </div>
   );
 }
