@@ -2,10 +2,12 @@
 
 ## Prerequisites
 
-- **Node.js** 18+ (LTS recommended)
-- **Git** 2.40+
+- **Node.js** 18+ (LTS recommended) — `C:\Program Files\nodejs`
+- **Git** 2.40+ — `C:\Program Files\Git\cmd`
 - **Supabase** project (free tier is fine for dev)
 - **Sportmonks** API token (upstream base; CricAPI planned later)
+
+**Terminal note:** If `git` or `npm` is not found, open a **new** terminal tab (workspace `.vscode/settings.json` prepends Git/Node to PATH). After installing Git/Node, restart Cursor once if a new tab still fails.
 
 ## Setup
 
@@ -30,6 +32,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Branch workflow
 
 See [BRANCHING.md](./BRANCHING.md). Current active branch should be the feature in progress.
+
+**Cursor agents:** Project context lives in `.cursor/skills/cric-fantasy-league/SKILL.md` — read it at the start of new chats.
 
 ```powershell
 git branch                    # list branches

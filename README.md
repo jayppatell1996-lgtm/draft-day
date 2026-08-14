@@ -11,7 +11,8 @@ Season-long **salary-cap head-to-head** fantasy cricket league — self-hosted w
 | [ROADMAP](./docs/ROADMAP.md) | Feature phases and checklists |
 | [BRANCHING](./docs/BRANCHING.md) | Git workflow and feature branches |
 | [ARCHITECTURE](./docs/ARCHITECTURE.md) | System design and migration plan |
-| [UPSTREAM](./docs/UPSTREAM.md) | Base repo and reference projects |
+| [DEVELOPMENT](./docs/DEVELOPMENT.md) | Local setup and verify checklist |
+| [Agent skill](./.cursor/skills/cric-fantasy-league/SKILL.md) | Context for Cursor agents in new chats |
 
 ---
 
