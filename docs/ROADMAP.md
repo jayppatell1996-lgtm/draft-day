@@ -33,6 +33,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] `squad_structure_config` (admin-editable: 5 BAT / 5 BOWL / 1 WK / 1 FLEX)
 - [x] `lock_times` (per franchise per real fixture)
 - [x] Run migration locally (`scripts/migrate-league-schema.js`)
+
 ## Phase 4 — Salary cap & squad (`feature/04-salary-cap-squad`)
 
 - [x] 120-credit salary cap enforcement
@@ -54,13 +55,14 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 ## Phase 6 — Transfers & locks (`feature/06-transfers-locks`)
 
-- 1 free trade per match, max 10 banked
-- 56 trades group stage, 8 playoffs (0 free)
-- Lock-to-lock between deadlines
-- Lock enforced on both sides of a transfer
-- Team hidden until match starts
-- Advance squad submission
-- Full trade log per team per round
+- [ ] 3 free trades per H2H round, max 10 banked
+- [ ] 8 playoff trades (0 free)
+- [ ] Lock-to-lock between deadlines
+- [ ] Lock enforced on both sides of a transfer
+- [ ] Opponent squad hidden until match starts
+- [ ] Advance squad submission
+- [ ] Full trade log per team per round
+- [ ] Trade limits read from league config (defaults until Phase 11 admin panel)
 
 ## Phase 7 — Auto-sub (`feature/07-auto-sub`)
 
@@ -96,12 +98,21 @@ Top 6 → IPL format:
 
 Playoff bracket UI.
 
-## Phase 11 — Admin (`feature/11-admin-panel`)
+## Phase 11 — Admin controls (`feature/11-admin-controls`)
 
-- Edit squad structure requirements
-- Trigger score syncs
-- Manage rounds / tournament config
-- Player price adjustments (performance-based)
+Central admin panel for league operators (first registered user = admin; guard all routes/APIs with `isAdmin`).
+
+- [ ] Admin-only `/admin` dashboard
+- [ ] **League settings:** season label, max teams (2–12), salary cap
+- [ ] **Trade rules:** free trades per H2H round, max banked, playoff trade allowance (overrides Phase 6 defaults)
+- [ ] **Squad structure:** edit slot counts via `squad_structure_config` (WK / BAT / BOWL / FLEX / bench)
+- [ ] **Schedule:** generate H2H round-robin; link rounds to real-world fixture windows
+- [ ] **Locks:** view and override lock times per franchise / fixture
+- [ ] **Scoring:** manual score sync trigger; recalculate H2H matchup results
+- [ ] **Players:** adjust prices (individual or bulk); activate/deactivate pool entries
+- [ ] **Audit:** view all teams, squads, transfers, and trade logs
+
+Depends on Phase 6 (transfer engine) and Phase 9 (live data sync hooks).
 
 ## Phase 12 — UI polish (`feature/12-ui-pages`)
 
@@ -119,6 +130,8 @@ Tournament-aware player cards in the squad builder / free-agent pool:
 - [ ] Sort pool by form, price, role, franchise
 - [ ] Data from score sync (depends on Phase 8 scoring + Phase 9 live data)
 - [ ] Show on `/squad` player pool rows and future Free Agents page
+- [ ] Ensure full squad including bench is picked within the salary cap
+- [ ] Save option when changing players in squad
 
 ---
 

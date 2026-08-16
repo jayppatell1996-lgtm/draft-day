@@ -30,9 +30,15 @@
 
 ### League engine
 
-- Round-robin fixture generator (12 teams → 66 matches over 11 rounds)
+- Round-robin fixture generator (2–12 teams; each pair once)
 - H2H scoring: compare fantasy team points per real-world match round
 - Playoff bracket state machine
+
+### Admin controls
+
+- `/admin` panel (Phase 11): league settings, trade rules, squad structure, schedule, locks, score sync, player prices, audit
+- Partial admin today: H2H schedule generation on `/standings` (Phase 5)
+- Config stored in `leagues`, `squad_structure_config`, and future league-settings columns
 
 ### Squad engine
 

@@ -4,8 +4,8 @@ Canonical rules for implementation. If code disagrees with this file, fix the co
 
 ## League & format
 
-- 12 fantasy teams, head-to-head
-- Group stage: 11-round round-robin (each team plays every other once) → **66 fixtures** auto-generated
+- **2–12 fantasy teams**, head-to-head (round-robin scales with team count)
+- Group stage: each team plays every other once (e.g. 12 teams → 11 rounds, 66 fixtures)
 - Standings points: Win **2**, Draw **1**, Loss **0**
 - Top **6** advance to IPL-style playoffs:
   1. Qualifier 1 (#1 vs #2)
@@ -54,12 +54,13 @@ Canonical rules for implementation. If code disagrees with this file, fix the co
 
 ## Transfers
 
-- **1 free trade per match**, up to **10 banked** (carry-forward)
-- **56** total trades group stage; **8** playoffs (**0** free)
+- **3 free trades per H2H round**, up to **10 banked** (carry-forward)
+- **8** total trades in playoffs (**0** free)
 - Lock-to-lock system (changes between deadlines count)
 - Opponent squad hidden until match starts
 - Advance squad submission supported
 - Full trade log per team per round
+- Trade limits **admin-configurable** (Phase 11 admin panel; hardcoded defaults until then)
 
 ## Scoring (CPL rules)
 
@@ -69,13 +70,28 @@ Canonical rules for implementation. If code disagrees with this file, fix the co
 - **Fielding:** catch +12; stumping +15; direct run out +20; indirect run out +20
 - Exclude: substitute fielder dismissals, Super Over
 
+## Admin controls (Phase 11)
+
+Central `/admin` panel for league operators (`isAdmin` required):
+
+- League settings: season label, max teams (2–12), salary cap
+- Trade rules: free trades per H2H round, max banked, playoff allowance
+- Squad structure: slot counts via `squad_structure_config`
+- Schedule: generate H2H round-robin; link rounds to fixture windows
+- Locks: view/override lock times per franchise
+- Scoring: manual score sync; recalculate H2H results
+- Players: price adjustments; activate/deactivate pool entries
+- Audit: all teams, squads, transfers, trade logs
+
+First registered user is admin. Phase 5 already includes admin schedule generation on `/standings`; Phase 11 consolidates into a full panel.
+
 ## UI pages (v1)
 
 - Squad builder (12 + 4 from scratch)
 - My Team (squad, points, C/VC)
 - Standings / leaderboard
 - Head-to-head matchup per round
-- Admin panel (score sync triggers, rounds)
+- Admin panel (league/trade/squad/scoring config, sync triggers, audit)
 - Playoff bracket
 - Player history / stats
 - Trade history log

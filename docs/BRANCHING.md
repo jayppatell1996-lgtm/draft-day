@@ -15,8 +15,8 @@
 | `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Planned |
 | `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | Planned |
 | `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | Planned |
-| `feature/11-admin-panel` | Configurable squad rules, manual sync triggers | Planned |
-| `feature/12-ui-pages` | Free agents, My Team, matchups, trade history | Planned |
+| `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Planned |
+| `feature/12-ui-pages` | Free agents, My Team, trade history | Planned |
 | `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | Planned |
 
 ## Workflow
@@ -66,8 +66,9 @@
                     ├─► 08-scoring-engine
                     └─► 09-live-score-sync
                           ├─► 10-playoffs
-                          ├─► 11-admin-panel
-                          └─► 12-ui-pages
+                          ├─► 11-admin-controls
+                          ├─► 12-ui-pages
+                          └─► 13-player-pool-stats
 ```
 
-`08-scoring-engine` and `09-live-score-sync` can be developed in parallel after `03` if needed, but both should land before playoffs go live.
+`08-scoring-engine` and `09-live-score-sync` can be developed in parallel after `03` if needed, but both should land before playoffs go live. `11-admin-controls` needs Phase 6 (transfers) and Phase 9 (sync hooks) for full functionality; partial admin (schedule, squad structure) can ship earlier if split.

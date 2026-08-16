@@ -26,7 +26,7 @@ See [ROADMAP.md](./ROADMAP.md). Major deltas:
 - **Format:** daily pick'em → season-long salary-cap head-to-head league
 - **Auth:** Supabase Auth → NextAuth (email/password, bcrypt cost 12)
 - **Squad:** 11-player match team → 12 playing + 4 bench with configurable roles
-- **League:** global leaderboard → 12-team H2H round-robin + IPL playoffs
+- **League:** global leaderboard → 2–12 team H2H round-robin + IPL playoffs
 - **Scoring:** upstream rules → CPL ruleset (see spec)
 - **Data:** Sportmonks → CricAPI (planned)
 

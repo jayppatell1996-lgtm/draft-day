@@ -4,15 +4,15 @@ description: >-
   Guides development of the Cric Fantasy League app — a self-hosted, season-long
   salary-cap head-to-head fantasy cricket website (CricBattle-style, IPL format).
   Use when working in the Cricket Fantasy App repo, continuing the feature-branch
-  roadmap, or implementing auth, squads, transfers, H2H leagues, scoring, or
-  live cricket data sync.
+  roadmap, or implementing auth, squads, transfers, H2H leagues, scoring, admin
+  controls, or live cricket data sync.
 ---
 
 # Cric Fantasy League
 
 ## What this project is
 
-Private **salary-cap** fantasy cricket league (not draft, not auction). **12 fantasy teams**, head-to-head round-robin, IPL-style playoffs. Hosted as a **Next.js website**.
+Private **salary-cap** fantasy cricket league (not draft, not auction). **2–12 fantasy teams**, head-to-head round-robin, IPL-style playoffs. Hosted as a **Next.js website**.
 
 Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://github.com/sanaro99/fantasy-cricket) (GPL-3.0).
 
@@ -46,7 +46,7 @@ Before coding, read `docs/BRANCHING.md` for the active feature branch and depend
 4. Never commit `.env.local` or API keys.
 5. Only create git commits when the user asks.
 
-Feature branches (in order): `01-foundation` ✓ → `02-auth-nextauth` ✓ → `03-database-schema` ✓ → `04-salary-cap-squad` ✓ → `05-league-h2h` → `06-transfers-locks` → `07-auto-sub` → `08-scoring-engine` → `09-live-score-sync` → `10-playoffs` → `11-admin-panel` → `12-ui-pages` → `13-player-pool-stats`.
+Feature branches (in order): `01-foundation` ✓ → `02-auth-nextauth` ✓ → `03-database-schema` ✓ → `04-salary-cap-squad` ✓ → `05-league-h2h` ✓ → `06-transfers-locks` → `07-auto-sub` → `08-scoring-engine` → `09-live-score-sync` → `10-playoffs` → `11-admin-controls` → `12-ui-pages` → `13-player-pool-stats`.
 
 ## Product rules (do not drift)
 
@@ -56,12 +56,12 @@ Summarized here; full detail in [reference.md](reference.md) and `docs/ROADMAP.m
 - **Cap:** 120 credits; variable prices; budget updates on every swap.
 - **Captain / VC:** 2× / 1× (no VC bonus beyond base per CPL spec).
 - **Auto-sub:** Non-playing starter → highest-scoring bench player who played.
-- **Transfers:** Lock-to-lock; 1 free/match (max 10 banked); 56 group stage, 8 playoffs (0 free).
-- **League:** 11-round round-robin (66 fixtures); W/D/L = 2/1/0; top 6 playoffs.
-- **Locks:** Per IPL team at match start; double-headers lock independently.
-- **Admin:** Configurable squad structure rules; first user = admin.
+- **Transfers:** Lock-to-lock; **3 free trades per H2H round**, max **10 banked**; **8** playoff trades (**0** free). Limits admin-configurable in Phase 11.
+- **League:** Round-robin scales with team count (2–12); W/D/L = 2/1/0; top 6 playoffs.
+- **Locks:** Per franchise at match start; double-headers lock independently.
+- **Admin (Phase 11):** Central `/admin` panel — league settings, trade rules, squad structure, schedule, locks, score sync, player prices, audit logs. First user = admin.
 - **v1 scope:** Single private league; no overseas limits; no real money.
-- **Player pool (Phase 13):** Tournament stats + form badge (in form / average / out of form) on pool cards; requires scoring + live data sync first.
+- **Player pool (Phase 13):** Tournament stats + form badge on pool cards; full-bench salary-cap validation; explicit save when editing squad.
 
 ## Code conventions
 

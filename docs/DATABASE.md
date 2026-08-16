@@ -82,3 +82,4 @@ Existing `fantasy_teams` from signup are attached to this league automatically.
 | 05 — League H2H | `rounds`, `h2h_matchups` |
 | 06 — Transfers & locks | `transfers`, `trade_log`, `lock_times` |
 | 09 — Live data | `fixtures`, `lock_times` (CricAPI sync) |
+| 11 — Admin controls | `leagues`, `squad_structure_config`, `players`, `player_prices`, `rounds`, `h2h_matchups`, `transfers`, `trade_log` |

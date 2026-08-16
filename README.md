@@ -1,6 +1,6 @@
 # Cric Fantasy League
 
-Season-long **salary-cap head-to-head** fantasy cricket league — self-hosted website for private IPL-style competitions (12 teams, round-robin + playoffs, 12+4 squads, lock-to-lock transfers).
+Season-long **salary-cap head-to-head** fantasy cricket league — self-hosted website for private IPL-style competitions (2–12 teams, round-robin + playoffs, 12+4 squads, lock-to-lock transfers).
 
 > **Fork status:** Built on [sanaro99/fantasy-cricket](https://github.com/sanaro99/fantasy-cricket) (GPL-3.0). See [docs/UPSTREAM.md](./docs/UPSTREAM.md), [docs/ROADMAP.md](./docs/ROADMAP.md), and [docs/BRANCHING.md](./docs/BRANCHING.md).
 
