@@ -45,11 +45,12 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 ## Phase 5 — League format (`feature/05-league-h2h`)
 
-- 12 fantasy teams
-- 11-round round-robin (66 fixtures auto-generated)
-- W/D/L points: 2 / 1 / 0
-- Standings + head-to-head matchup page per round
-- No-result matches excluded from scoring
+- [x] Round-robin generator (2–12 teams; each pair once; rounds/matchups scale with team count)
+- [x] `rounds` + `h2h_matchups` schedule creation (script + admin API)
+- [x] W/D/L standings (2 / 1 / 0; no-result excluded)
+- [x] `/standings` league table
+- [x] `/matchups` head-to-head page per round
+- [x] Generate schedule when 2+ teams registered (admin button or `scripts/init-h2h-schedule.js`)
 
 ## Phase 6 — Transfers & locks (`feature/06-transfers-locks`)
 

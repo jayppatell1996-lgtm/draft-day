@@ -6,6 +6,8 @@ import { signOut, useSession } from 'next-auth/react';
 
 const NAV_ITEMS = [
   { href: '/squad', label: 'My Squad' },
+  { href: '/standings', label: 'Standings' },
+  { href: '/matchups', label: 'Matchups' },
   { href: '/matches', label: 'Matches' },
   { href: '/leaderboard', label: 'Leaderboard' },
   { href: '/rules', label: 'Rules' },

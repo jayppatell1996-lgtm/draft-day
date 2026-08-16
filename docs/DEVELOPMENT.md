@@ -39,6 +39,14 @@ Seed the player pool (required before squad builder):
 node --env-file=.env.local scripts/seed-players.js
 ```
 
+When at least 2 fantasy teams are registered (up to 12), generate the H2H round-robin schedule:
+
+```powershell
+node --env-file=.env.local scripts/init-h2h-schedule.js
+```
+
+Or use **Generate schedule** on `/standings` (admin only).
+
 Generate a NextAuth secret:
 
 ```powershell

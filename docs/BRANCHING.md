@@ -9,8 +9,8 @@
 | `feature/02-auth-nextauth` | Email login, bcrypt, team name signup, admin flag | Done (merged, `v0.2.0-auth`) |
 | `feature/03-database-schema` | League, teams, squads, rounds, config tables | Done (merged, `v0.3.0-schema`) |
 | `feature/04-salary-cap-squad` | 120-credit cap, 12+4 squad builder, role slots | Done (merged, `v0.4.0-squad`) |
-| `feature/05-league-h2h` | 12-team H2H, round-robin fixtures, standings | **Next** |
-| `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | Planned |
+| `feature/05-league-h2h` | H2H round-robin (2–12 teams), fixtures, standings | Done (merged, `v0.5.0-h2h`) |
+| `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | **Next** |
 | `feature/07-auto-sub` | Bench auto-sub when playing XI don't feature | Planned |
 | `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Planned |
 | `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | Planned |

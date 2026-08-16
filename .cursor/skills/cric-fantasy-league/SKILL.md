@@ -24,7 +24,8 @@ Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://gi
 | Auth (NextAuth + bcrypt) | Done (merged `main`, tagged `v0.2.0-auth`) |
 | League schema (Phase 3) | Done (merged `main`, tagged `v0.3.0-schema`) |
 | Squad builder (Phase 4) | Done (merged `main`, tagged `v0.4.0-squad`) |
-| **Next work** | `feature/05-league-h2h` |
+| H2H league (Phase 5) | Done (merged `main`, tagged `v0.5.0-h2h`) |
+| **Next work** | `feature/06-transfers-locks` |
 | Data | Upstream uses Sportmonks → plan **CricAPI** in phase 09 |
 
 Before coding, read `docs/BRANCHING.md` for the active feature branch and dependency order.
