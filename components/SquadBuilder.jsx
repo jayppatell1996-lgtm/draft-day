@@ -173,7 +173,17 @@ export default function SquadBuilder() {
     );
   }
 
-  const { squad, slots, filledCount, requiredCount } = squadData;
+  const { squad, slots, filledCount, requiredCount, transferWindow } = squadData;
+
+  const windowLabel = (() => {
+    if (!transferWindow) return 'Loading…';
+    if (transferWindow.mode === 'initial_build') return 'Initial squad build — no trade limits';
+    if (!transferWindow.windowOpen) return 'Transfer window closed';
+    if (transferWindow.mode === 'playoffs') {
+      return `${transferWindow.tradesRemainingThisRound ?? 0} playoff trades left (0 free)`;
+    }
+    return `${transferWindow.freeTradesAvailable ?? 0} free trades available`;
+  })();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -183,7 +193,7 @@ export default function SquadBuilder() {
         </div>
       )}
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="surface-card p-4">
           <p className="text-xs uppercase tracking-wide text-zinc-500">Budget</p>
           <p className="mt-1 text-2xl font-semibold text-white">
@@ -197,6 +207,16 @@ export default function SquadBuilder() {
             {filledCount} / {requiredCount}
           </p>
           <p className="mt-1 text-sm text-zinc-400">12 playing + 4 bench</p>
+        </div>
+        <div className="surface-card p-4">
+          <p className="text-xs uppercase tracking-wide text-zinc-500">Transfers</p>
+          <p className="mt-1 text-sm font-medium text-zinc-100">{windowLabel}</p>
+          {transferWindow?.mode !== 'initial_build' && transferWindow?.currentRound && (
+            <p className="mt-1 text-xs text-zinc-500">
+              {transferWindow.currentRound.name || `Round ${transferWindow.currentRound.roundNumber}`}
+              {transferWindow.bankedFreeTrades > 0 && ` · ${transferWindow.bankedFreeTrades} banked`}
+            </p>
+          )}
         </div>
         <div className="surface-card p-4">
           <p className="text-xs uppercase tracking-wide text-zinc-500">Selection</p>
@@ -338,10 +358,11 @@ export default function SquadBuilder() {
                 </p>
                 {players.map((player) => {
                   const owned = ownedIds.has(player.id);
+                  const locked = player.locked;
                   const overBudget =
                     selectedSlot &&
                     squad.budgetRemaining + (selectedSlot.player?.price ?? 0) < player.price;
-                  const canAssign = Boolean(selectedSlotId) && !owned && !overBudget && !saving;
+                  const canAssign = Boolean(selectedSlotId) && !owned && !overBudget && !locked && !saving && (transferWindow?.canTransfer !== false || transferWindow?.mode === 'initial_build' || !selectedSlot?.player_id);
                   const rowClass = canAssign
                     ? 'border-white/10 bg-surface-950 hover:border-accent-500/30 hover:bg-accent-500/5 cursor-pointer'
                     : 'border-white/5 bg-surface-950/50';
@@ -361,6 +382,7 @@ export default function SquadBuilder() {
                         </p>
                       </div>
                       {owned && <span className="text-xs text-zinc-500">In squad</span>}
+                      {locked && !owned && <span className="text-xs text-red-400/80">Locked</span>}
                       {selectedSlotId && overBudget && !owned && (
                         <span className="text-xs text-amber-400/80">Over budget</span>
                       )}
@@ -384,7 +406,7 @@ export default function SquadBuilder() {
                     <div
                       key={player.id}
                       className={`flex items-center gap-3 rounded-lg border px-3 py-2 ${rowClass} ${
-                        owned || overBudget ? 'opacity-60' : ''
+                        owned || overBudget || locked ? 'opacity-60' : ''
                       }`}
                     >
                       {content}

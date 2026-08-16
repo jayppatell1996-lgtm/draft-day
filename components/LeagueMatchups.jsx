@@ -13,6 +13,8 @@ export default function LeagueMatchups() {
   const [selectedRound, setSelectedRound] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [opponentPreview, setOpponentPreview] = useState(null);
+  const [opponentLoading, setOpponentLoading] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -47,6 +49,23 @@ export default function LeagueMatchups() {
     const round = parseInt(e.target.value, 10);
     setSelectedRound(round);
     router.push({ pathname: '/matchups', query: { round } }, undefined, { shallow: true });
+  }
+
+  async function loadOpponentSquad(matchupId) {
+    setOpponentLoading(true);
+    setOpponentPreview(null);
+    try {
+      const res = await fetch(`/api/league/opponent-squad?matchupId=${matchupId}`, {
+        cache: 'no-store',
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load opponent');
+      setOpponentPreview(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setOpponentLoading(false);
+    }
   }
 
   const myTeamId = session?.user?.teamId;
@@ -141,10 +160,40 @@ export default function LeagueMatchups() {
                     </div>
                   </div>
                   <p className="mt-3 text-center text-xs text-zinc-400">{resultLabel(m)}</p>
+                  {involvesMe && (
+                    <button
+                      type="button"
+                      onClick={() => loadOpponentSquad(m.id)}
+                      className="btn-ghost mt-3 w-full text-xs"
+                    >
+                      {opponentLoading ? 'Loading…' : 'View opponent squad'}
+                    </button>
+                  )}
                 </div>
               );
             })}
           </div>
+
+          {opponentPreview && (
+            <div className="surface-card mt-6 p-4">
+              <h3 className="text-sm font-semibold text-white">
+                {opponentPreview.opponent?.teamName}
+              </h3>
+              {opponentPreview.hidden ? (
+                <p className="mt-2 text-sm text-zinc-400">{opponentPreview.message}</p>
+              ) : (
+                <ul className="mt-3 space-y-1 text-sm text-zinc-300">
+                  {opponentPreview.opponent?.slots
+                    ?.filter((s) => s.player)
+                    .map((s) => (
+                      <li key={`${s.slot_type}-${s.slot_index}`}>
+                        {s.player.full_name} · {s.player.role} · {s.slot_type}
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>

@@ -55,14 +55,14 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 ## Phase 6 — Transfers & locks (`feature/06-transfers-locks`)
 
-- [ ] 3 free trades per H2H round, max 10 banked
-- [ ] 8 playoff trades (0 free)
-- [ ] Lock-to-lock between deadlines
-- [ ] Lock enforced on both sides of a transfer
-- [ ] Opponent squad hidden until match starts
-- [ ] Advance squad submission
-- [ ] Full trade log per team per round
-- [ ] Trade limits read from league config (defaults until Phase 11 admin panel)
+- [x] 3 free trades per H2H round, max 10 banked
+- [x] 8 playoff trades (0 free)
+- [x] Lock-to-lock between deadlines (when `lock_times` populated)
+- [x] Lock enforced on both sides of a transfer
+- [x] Opponent squad hidden until match starts
+- [ ] Advance squad submission (future: round snapshots)
+- [x] Full trade log per team per round
+- [x] Trade limits read from league config (defaults until Phase 11 admin panel)
 
 ## Phase 7 — Auto-sub (`feature/07-auto-sub`)
 

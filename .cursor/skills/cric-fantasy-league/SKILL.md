@@ -25,7 +25,8 @@ Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://gi
 | League schema (Phase 3) | Done (merged `main`, tagged `v0.3.0-schema`) |
 | Squad builder (Phase 4) | Done (merged `main`, tagged `v0.4.0-squad`) |
 | H2H league (Phase 5) | Done (merged `main`, tagged `v0.5.0-h2h`) |
-| **Next work** | `feature/06-transfers-locks` |
+| Transfers & locks (Phase 6) | Done (merged `main`, tagged `v0.6.0-transfers`) |
+| **Next work** | `feature/07-auto-sub` |
 | Data | Upstream uses Sportmonks → plan **CricAPI** in phase 09 |
 
 Before coding, read `docs/BRANCHING.md` for the active feature branch and dependency order.
@@ -46,7 +47,7 @@ Before coding, read `docs/BRANCHING.md` for the active feature branch and depend
 4. Never commit `.env.local` or API keys.
 5. Only create git commits when the user asks.
 
-Feature branches (in order): `01-foundation` ✓ → `02-auth-nextauth` ✓ → `03-database-schema` ✓ → `04-salary-cap-squad` ✓ → `05-league-h2h` ✓ → `06-transfers-locks` → `07-auto-sub` → `08-scoring-engine` → `09-live-score-sync` → `10-playoffs` → `11-admin-controls` → `12-ui-pages` → `13-player-pool-stats`.
+Feature branches (in order): `01-foundation` ✓ → `02-auth-nextauth` ✓ → `03-database-schema` ✓ → `04-salary-cap-squad` ✓ → `05-league-h2h` ✓ → `06-transfers-locks` ✓ → `07-auto-sub` → `08-scoring-engine` → `09-live-score-sync` → `10-playoffs` → `11-admin-controls` → `12-ui-pages` → `13-player-pool-stats`.
 
 ## Product rules (do not drift)
 

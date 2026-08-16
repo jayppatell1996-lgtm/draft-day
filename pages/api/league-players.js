@@ -1,6 +1,7 @@
 import { getServerAuthSession } from '../../lib/getServerAuthSession';
 import { listLeaguePlayers } from '../../lib/players';
 import { getSquadWithSlots } from '../../lib/squads';
+import { getLockedPlayerIds } from '../../lib/locks';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -24,8 +25,14 @@ export default async function handler(req, res) {
       excludePlayerIds: [],
     });
 
+    const lockedIds = new Set(await getLockedPlayerIds());
+    const playersWithLocks = players.map((p) => ({
+      ...p,
+      locked: lockedIds.has(p.id),
+    }));
+
     return res.status(200).json({
-      players,
+      players: playersWithLocks,
       franchises: [...new Map(
         players
           .filter((p) => p.franchiseExternalId)

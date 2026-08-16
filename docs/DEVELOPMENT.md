@@ -47,6 +47,12 @@ node --env-file=.env.local scripts/init-h2h-schedule.js
 
 Or use **Generate schedule** on `/standings` (admin only).
 
+Apply the Phase 6 transfer-window migration (once):
+
+```powershell
+node --env-file=.env.local scripts/migrate-transfer-window.js
+```
+
 Generate a NextAuth secret:
 
 ```powershell
