@@ -1,11 +1,12 @@
 import Head from 'next/head';
 import TradeHistory from '../components/TradeHistory';
+import { pageTitle } from '../lib/branding';
 
 export default function TradesPage() {
   return (
     <>
       <Head>
-        <title>Trade history — Cric Fantasy League</title>
+        <title>{pageTitle('Trade history')}</title>
       </Head>
       <TradeHistory />
     </>

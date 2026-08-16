@@ -1,11 +1,12 @@
 import SquadBuilder from '../components/SquadBuilder';
 import Head from 'next/head';
+import { pageTitle } from '../lib/branding';
 
 export default function SquadPage() {
   return (
     <>
       <Head>
-        <title>My Squad | Cric Fantasy League</title>
+        <title>{pageTitle('My Squad')}</title>
       </Head>
       <div className="app-shell min-h-[calc(100vh-3.5rem)]">
         <div className="border-b border-white/10 bg-surface-900/50">

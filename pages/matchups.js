@@ -1,11 +1,12 @@
 import Head from 'next/head';
 import LeagueMatchups from '../components/LeagueMatchups';
+import { pageTitle } from '../lib/branding';
 
 export default function MatchupsPage() {
   return (
     <>
       <Head>
-        <title>Matchups | Cric Fantasy League</title>
+        <title>{pageTitle('Matchups')}</title>
       </Head>
       <div className="app-shell min-h-[calc(100vh-3.5rem)]">
         <div className="border-b border-white/10 bg-surface-900/50">

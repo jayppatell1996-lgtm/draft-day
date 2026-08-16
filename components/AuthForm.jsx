@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
+import { APP_NAME } from '../lib/branding';
 import { validateEmail, validatePassword, validateTeamName } from '../lib/authValidation';
 
 export default function AuthForm() {
@@ -104,7 +105,7 @@ export default function AuthForm() {
   return (
     <div className="w-full max-w-md">
       <div className="mb-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">Private league</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">{APP_NAME}</p>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight text-white">
           {mode === 'login' ? 'Sign in' : 'Create your team'}
         </h1>

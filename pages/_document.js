@@ -1,9 +1,12 @@
 import { Html, Head, Main, NextScript } from 'next/document';
+import { APP_NAME, APP_TAGLINE } from '../lib/branding';
 
 export default function Document() {
   return (
     <Html lang="en" className="dark">
       <Head>
+        <meta name="application-name" content={APP_NAME} />
+        <meta name="description" content={APP_TAGLINE} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

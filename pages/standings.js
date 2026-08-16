@@ -1,11 +1,12 @@
 import Head from 'next/head';
 import LeagueStandings from '../components/LeagueStandings';
+import { pageTitle } from '../lib/branding';
 
 export default function StandingsPage() {
   return (
     <>
       <Head>
-        <title>League Standings | Cric Fantasy League</title>
+        <title>{pageTitle('Standings')}</title>
       </Head>
       <div className="app-shell min-h-[calc(100vh-3.5rem)]">
         <div className="border-b border-white/10 bg-surface-900/50">

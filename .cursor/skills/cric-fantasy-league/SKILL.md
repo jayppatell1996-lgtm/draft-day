@@ -1,18 +1,18 @@
 ---
 name: cric-fantasy-league
 description: >-
-  Guides development of the Cric Fantasy League app — a self-hosted, season-long
+  Guides development of Draft Day — a self-hosted, season-long
   salary-cap head-to-head fantasy cricket website (CricBattle-style, IPL format).
   Use when working in the Cricket Fantasy App repo, continuing the feature-branch
   roadmap, or implementing auth, squads, transfers, H2H leagues, scoring, admin
   controls, or live cricket data sync.
 ---
 
-# Cric Fantasy League
+# Draft Day (fantasy cricket league)
 
 ## What this project is
 
-Private **salary-cap** fantasy cricket league (not draft, not auction). **2–12 fantasy teams**, head-to-head round-robin, IPL-style playoffs. Hosted as a **Next.js website**.
+**Draft Day** — private salary-cap fantasy cricket league (not draft, not auction). **2–12 fantasy teams**, head-to-head round-robin, IPL-style playoffs. Hosted as a **Next.js website**.
 
 Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://github.com/sanaro99/fantasy-cricket) (GPL-3.0).
 
@@ -37,7 +37,7 @@ Before coding, read `docs/BRANCHING.md` for the active feature branch and depend
 - **DB:** Supabase/Postgres (migrations in `supabase/migrations/`)
 - **Target auth:** NextAuth (email/password, session: `teamId`, `teamName`, `isAdmin`)
 - **Target scoring:** CPL rules (see [reference.md](reference.md))
-- **Package name:** `cric-fantasy-league`
+- **Package name:** `draft-day` (display: **Draft Day**)
 
 ## Git workflow (required)
 
@@ -80,6 +80,7 @@ Summarized here; full detail in [reference.md](reference.md) and `docs/ROADMAP.m
 | `docs/ARCHITECTURE.md` | Domains + upstream migration |
 | `docs/UPSTREAM.md` | Base repo + reference projects |
 | `docs/DEVELOPMENT.md` | Local setup |
+| `docs/VERCEL.md` | Production deploy on Vercel |
 | `pages/api/` | Existing API routes (selections, locks, leaderboard) |
 | `supabase/migrations/` | SQL migrations |
 | `docs/DATABASE.md` | Schema reference + migration order |

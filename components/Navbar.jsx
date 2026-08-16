@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { signOut, useSession } from 'next-auth/react';
+import { APP_NAME } from '../lib/branding';
 
 const NAV_ITEMS = [
   { href: '/squad', label: 'My Squad' },
@@ -62,10 +63,10 @@ export default function Navbar() {
         <nav className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
           <Link href={isLoginPage ? '/login' : '/matches'} className="flex items-center gap-3">
             <div className="relative h-8 w-8 overflow-hidden rounded-lg ring-1 ring-white/10">
-              <Image src="/images/logo.png" alt="Cric Fantasy League" fill className="object-contain p-0.5" />
+              <Image src="/images/logo.png" alt={APP_NAME} fill className="object-contain p-0.5" />
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-semibold tracking-tight text-zinc-100">Cric Fantasy</p>
+              <p className="text-sm font-semibold tracking-tight text-zinc-100">{APP_NAME}</p>
               <p className="text-[11px] text-zinc-500">Salary cap league</p>
             </div>
           </Link>

@@ -1,10 +1,11 @@
 import Head from 'next/head';
+import { pageTitle } from '../lib/branding';
 
 export default function Rules() {
   return (
     <>
       <Head>
-        <title>Rules | Cric Fantasy League</title>
+        <title>{pageTitle('Rules')}</title>
         <meta name="description" content="Rules and scoring system" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

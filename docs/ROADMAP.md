@@ -11,7 +11,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] Fork base from sanaro99/fantasy-cricket
 - [x] Git repo + branch strategy
 - [ ] `.env.example`, local dev verified (`npm install && npm run dev`)
-- [ ] Rename package to `cric-fantasy-league` (display name TBD)
+- [x] Rename package to `draft-day` (display name **Draft Day**)
 
 ## Phase 2 — Auth (`feature/02-auth-nextauth`)
 

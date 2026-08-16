@@ -86,7 +86,7 @@ git checkout feature/02-auth-nextauth   # start next feature after 01 merges
 | `origin` | *(add your GitHub repo)* | Your hosted copy |
 
 ```powershell
-git remote add origin https://github.com/YOUR_USER/cric-fantasy-league.git
+git remote add origin https://github.com/YOUR_USER/draft-day.git
 git push -u origin main
 git push origin --tags
 ```

@@ -1,7 +1,7 @@
 {
-  "name": "cric-fantasy-league",
-  "version": "0.1.0",
-  "description": "Season-long salary-cap head-to-head fantasy cricket league",
+  "name": "draft-day",
+  "version": "0.6.0",
+  "description": "Draft Day — salary-cap head-to-head fantasy cricket league",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

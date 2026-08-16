@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import AuthForm from '../components/AuthForm';
+import { APP_NAME, APP_TAGLINE, pageTitle } from '../lib/branding';
 
 export default function Login() {
   return (
     <>
       <Head>
-        <title>Cric Fantasy League — Sign in</title>
-        <meta name="description" content="Sign in to your fantasy cricket league" />
+        <title>{pageTitle('Sign in')}</title>
+        <meta name="description" content={`Sign in to ${APP_NAME} — ${APP_TAGLINE}`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
