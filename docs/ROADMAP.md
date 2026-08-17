@@ -66,19 +66,23 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 ## Phase 7 — Auto-sub (`feature/07-auto-sub`)
 
-- If playing player doesn't feature → highest-scoring bench player who played fills in
-- Applied per match at round score calculation
-- Port logic from wwc-draft `effective-lineup` pattern
+- [x] If playing player doesn't feature → highest-scoring bench player who played fills in
+- [x] Applied per match at round score calculation (`lib/effectiveLineup.js`)
+- [x] Captain cascade when captain doesn't play (vice gets 2×)
+- [x] Unit tests (`npm run test:lineup`)
 
 ## Phase 8 — Scoring (`feature/08-scoring-engine`)
 
 CPL rules from spec PDF:
 
-- MoM +50
-- Batting: runs, boundaries, sixes, milestones, SR bonus (min 20 runs)
-- Bowling: wickets, maidens, hauls, economy tiers
-- Fielding: catches, stumpings, run outs (no substitute fielder dismissals)
-- Super Over excluded
+- [x] MoM +50
+- [x] Batting: runs, boundaries, sixes, milestones, SR bonus (min 20 runs)
+- [x] Bowling: wickets, maidens, hauls, economy tiers
+- [x] Fielding: catches, stumpings, run outs (no substitute fielder dismissals)
+- [x] Super Over excluded
+- [x] `player_match_scores` + `round_fixtures` tables
+- [x] Admin submit fixture scores + recalculate H2H round
+- [x] Unit tests (`npm run test:scoring`)
 
 ## Phase 9 — Live data (`feature/09-live-score-sync`)
 
@@ -102,13 +106,14 @@ Playoff bracket UI.
 
 Central admin panel for league operators (first registered user = admin; guard all routes/APIs with `isAdmin`).
 
-- [ ] Admin-only `/admin` dashboard
+- [x] Admin-only `/admin` dashboard (partial)
 - [ ] **League settings:** season label, max teams (2–12), salary cap
-- [ ] **Trade rules:** free trades per H2H round, max banked, playoff trade allowance (overrides Phase 6 defaults)
-- [ ] **Squad structure:** edit slot counts via `squad_structure_config` (WK / BAT / BOWL / FLEX / bench)
-- [ ] **Schedule:** generate H2H round-robin; link rounds to real-world fixture windows
+- [ ] **Trade rules:** free trades per H2H round, max banked, playoff trade allowance
+- [ ] **Squad structure:** edit slot counts via `squad_structure_config`
+- [x] **Schedule:** reset / regenerate H2H round-robin
 - [ ] **Locks:** view and override lock times per franchise / fixture
-- [ ] **Scoring:** manual score sync trigger; recalculate H2H matchup results
+- [x] **Scoring (testing):** submit mock fixture scores; recalculate H2H matchup results
+- [x] **Scoring rules:** admin-editable point values (batting, bowling, fielding, MoM, captain multiplier)
 - [ ] **Players:** adjust prices (individual or bulk); activate/deactivate pool entries
 - [ ] **Audit:** view all teams, squads, transfers, and trade logs
 

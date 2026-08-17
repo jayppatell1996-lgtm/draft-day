@@ -11,11 +11,11 @@
 | `feature/04-salary-cap-squad` | 120-credit cap, 12+4 squad builder, role slots | Done (merged, `v0.4.0-squad`) |
 | `feature/05-league-h2h` | H2H round-robin (2–12 teams), fixtures, standings | Done (merged, `v0.5.0-h2h`) |
 | `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | Done (merged, `v0.6.0-transfers`) |
-| `feature/07-auto-sub` | Bench auto-sub when playing XI don't feature | **Next** |
-| `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Planned |
-| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | Planned |
+| `feature/07-auto-sub` | Bench auto-sub when playing XI don't feature | Done (merged, `v0.7.0-auto-sub`) |
+| `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Done (merged, `v0.8.0-scoring`) |
+| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Next** |
 | `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | Planned |
-| `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Planned |
+| `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Partial (schedule reset + mock scoring) |
 | `feature/12-ui-pages` | Free agents, My Team, trade history | Planned |
 | `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | Planned |
 

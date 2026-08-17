@@ -26,7 +26,9 @@ Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://gi
 | Squad builder (Phase 4) | Done (merged `main`, tagged `v0.4.0-squad`) |
 | H2H league (Phase 5) | Done (merged `main`, tagged `v0.5.0-h2h`) |
 | Transfers & locks (Phase 6) | Done (merged `main`, tagged `v0.6.0-transfers`) |
-| **Next work** | `feature/07-auto-sub` |
+| Auto-sub (Phase 7) | Done (merged `main`, tagged `v0.7.0-auto-sub`) |
+| Scoring engine (Phase 8) | Done (merged `main`, tagged `v0.8.0-scoring`) |
+| **Next work** | `feature/09-live-score-sync` |
 | Data | Upstream uses Sportmonks → plan **CricAPI** in phase 09 |
 
 Before coding, read `docs/BRANCHING.md` for the active feature branch and dependency order.
