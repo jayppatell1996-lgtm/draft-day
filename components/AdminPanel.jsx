@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import AdminScoringConfig from './AdminScoringConfig';
 
 export default function AdminPanel() {
   const { data: session, status } = useSession();
@@ -280,6 +281,12 @@ export default function AdminPanel() {
           <li>Does not delete fantasy teams, accounts, or squad players.</li>
         </ul>
       </div>
+
+      <AdminScoringConfig
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+      />
 
       <div className="surface-card mt-6 p-4">
         <h2 className="text-sm font-semibold text-white">Scoring (testing)</h2>

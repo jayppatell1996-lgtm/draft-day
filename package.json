@@ -9,7 +9,8 @@
     "test:lineup": "node scripts/test-effective-lineup.js",
     "test:scoring": "node scripts/test-scoring.js",
     "test": "node scripts/test-effective-lineup.js && node scripts/test-scoring.js",
-    "migrate-scoring": "node --env-file=.env.local scripts/migrate-scoring.js"
+    "migrate-scoring": "node --env-file=.env.local scripts/migrate-scoring.js",
+    "migrate-scoring-config": "node --env-file=.env.local scripts/migrate-scoring-config.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.16.0",

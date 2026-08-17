@@ -113,6 +113,7 @@ Central admin panel for league operators (first registered user = admin; guard a
 - [x] **Schedule:** reset / regenerate H2H round-robin
 - [ ] **Locks:** view and override lock times per franchise / fixture
 - [x] **Scoring (testing):** submit mock fixture scores; recalculate H2H matchup results
+- [x] **Scoring rules:** admin-editable point values (batting, bowling, fielding, MoM, captain multiplier)
 - [ ] **Players:** adjust prices (individual or bulk); activate/deactivate pool entries
 - [ ] **Audit:** view all teams, squads, transfers, and trade logs
 

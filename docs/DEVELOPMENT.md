@@ -57,6 +57,7 @@ Apply the Phase 8 scoring migration (once):
 
 ```powershell
 npm run migrate-scoring
+npm run migrate-scoring-config
 npm test
 ```
 
