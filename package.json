@@ -1,6 +1,6 @@
 {
   "name": "draft-day",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Draft Day — salary-cap head-to-head fantasy cricket league",
   "scripts": {
     "dev": "next dev",

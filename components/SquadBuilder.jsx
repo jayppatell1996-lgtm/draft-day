@@ -378,7 +378,12 @@ export default function SquadBuilder() {
                         <p className="truncate font-medium text-zinc-100">{player.fullName}</p>
                         <p className="text-xs text-zinc-400">
                           {player.role} · {player.franchiseName || '—'} · {player.price} cr
-                          {player.isOverseas ? ' · OS' : ''}
+                          {player.isOverseas ? ' · ' : ''}
+                          {player.isOverseas ? (
+                            <span className="rounded border border-sky-500/30 bg-sky-500/10 px-1 text-[10px] text-sky-300">
+                              OS
+                            </span>
+                          ) : null}
                         </p>
                       </div>
                       {owned && <span className="text-xs text-zinc-500">In squad</span>}

@@ -17,7 +17,11 @@ export default async function handler(req, res) {
     }
 
     const roundParam = req.query.round;
-    const [rounds, league] = await Promise.all([getRounds(), getLeagueSummary()]);
+    const includeAll = req.query.all === '1' || req.query.all === 'true';
+    const [rounds, league] = await Promise.all([
+      getRounds(undefined, { includePlayoffs: includeAll }),
+      getLeagueSummary(),
+    ]);
 
     if (!roundParam) {
       return res.status(200).json({ rounds, league });

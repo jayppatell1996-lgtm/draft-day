@@ -10,21 +10,44 @@ function formatAction(entry) {
     return `Added ${entry.payload?.playerIn || 'player'}`;
   }
   if (entry.action === 'round_banking') {
-    return `Banked ${entry.payload?.unusedBanked ?? 0} unused free trades`;
+    return `Banked ${entry.payload?.unusedBanked ?? 0} unused free trades (total ${entry.payload?.bankedTotal ?? '—'})`;
   }
-  return entry.action;
+  return entry.action.replace(/_/g, ' ');
 }
 
 export default function TradeHistory() {
   const [entries, setEntries] = useState([]);
+  const [rounds, setRounds] = useState([]);
+  const [roundFilter, setRoundFilter] = useState('');
+  const [transferWindow, setTransferWindow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function loadMeta() {
+      try {
+        const [roundsRes, windowRes] = await Promise.all([
+          fetch('/api/league/rounds?all=1', { cache: 'no-store' }),
+          fetch('/api/transfer-window', { cache: 'no-store' }),
+        ]);
+        const roundsData = await roundsRes.json();
+        const windowData = await windowRes.json();
+        if (roundsRes.ok) setRounds(roundsData.rounds || []);
+        if (windowRes.ok) setTransferWindow(windowData);
+      } catch {
+        /* optional meta */
+      }
+    }
+    loadMeta();
+  }, []);
 
   useEffect(() => {
     async function load() {
       try {
         setLoading(true);
-        const res = await fetch('/api/trade-log', { cache: 'no-store' });
+        setError('');
+        const params = roundFilter ? `?round=${roundFilter}` : '';
+        const res = await fetch(`/api/trade-log${params}`, { cache: 'no-store' });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Failed to load trade log');
         setEntries(data.entries || []);
@@ -35,9 +58,9 @@ export default function TradeHistory() {
       }
     }
     load();
-  }, []);
+  }, [roundFilter]);
 
-  if (loading) {
+  if (loading && entries.length === 0) {
     return (
       <div className="flex min-h-[40vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/10 border-t-accent-500" />
@@ -45,16 +68,63 @@ export default function TradeHistory() {
     );
   }
 
+  const windowLabel = (() => {
+    if (!transferWindow) return null;
+    if (transferWindow.mode === 'initial_build') return 'Initial squad build';
+    if (!transferWindow.windowOpen) return 'Transfer window closed';
+    if (transferWindow.mode === 'playoffs') {
+      return `${transferWindow.tradesRemainingThisRound ?? 0} playoff trades left`;
+    }
+    return `${transferWindow.freeTradesAvailable ?? 0} free trades · ${transferWindow.bankedFreeTrades ?? 0} banked`;
+  })();
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-semibold text-white">Trade history</h1>
-          <p className="mt-1 text-sm text-zinc-400">Transfers and squad changes per round</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">Activity</p>
+          <h1 className="mt-2 text-2xl font-semibold text-white">Trade history</h1>
+          <p className="mt-2 text-sm text-zinc-400">
+            Transfers, squad picks, and free-trade banking by round.
+          </p>
         </div>
-        <Link href="/squad" className="btn-ghost text-sm">
-          ← My squad
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/my-team" className="btn-ghost text-sm">
+            My team
+          </Link>
+          <Link href="/squad" className="btn-primary text-sm">
+            Edit squad
+          </Link>
+        </div>
+      </div>
+
+      {windowLabel && (
+        <div className="surface-card mb-4 p-4 text-sm text-zinc-300">
+          <span className="text-zinc-500">Current window · </span>
+          {windowLabel}
+          {transferWindow?.currentRound?.name && (
+            <span className="text-zinc-500"> · {transferWindow.currentRound.name}</span>
+          )}
+        </div>
+      )}
+
+      <div className="mb-4 flex flex-wrap items-center gap-2">
+        <label className="text-sm text-zinc-400">
+          Round
+          <select
+            value={roundFilter}
+            onChange={(e) => setRoundFilter(e.target.value)}
+            className="ml-2 rounded-lg border border-white/10 bg-surface-950 px-3 py-1.5 text-sm text-zinc-200"
+          >
+            <option value="">All rounds</option>
+            {rounds.map((r) => (
+              <option key={r.id} value={r.roundNumber}>
+                {r.name || `Round ${r.roundNumber}`}
+                {r.isPlayoff ? ' (playoff)' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
       </div>
 
       {error && (
@@ -65,7 +135,8 @@ export default function TradeHistory() {
 
       {entries.length === 0 ? (
         <div className="surface-card p-6 text-sm text-zinc-400">
-          No trades recorded yet. Changes during initial squad build and transfers appear here.
+          No trades recorded{roundFilter ? ' for this round' : ''} yet. Changes during initial squad
+          build and transfers appear here.
         </div>
       ) : (
         <div className="surface-card divide-y divide-white/5">
@@ -77,8 +148,10 @@ export default function TradeHistory() {
                   {new Date(entry.createdAt).toLocaleString()}
                 </time>
               </div>
-              {entry.roundName && (
-                <p className="mt-1 text-xs text-zinc-500">{entry.roundName}</p>
+              {(entry.roundName || entry.roundNumber) && (
+                <p className="mt-1 text-xs text-zinc-500">
+                  {entry.roundName || `Round ${entry.roundNumber}`}
+                </p>
               )}
             </div>
           ))}

@@ -6,7 +6,9 @@ import { signOut, useSession } from 'next-auth/react';
 import { APP_NAME } from '../lib/branding';
 
 const NAV_ITEMS = [
-  { href: '/squad', label: 'My Squad' },
+  { href: '/my-team', label: 'My Team' },
+  { href: '/squad', label: 'Squad builder' },
+  { href: '/free-agents', label: 'Free agents' },
   { href: '/trades', label: 'Trades' },
   { href: '/standings', label: 'Standings' },
   { href: '/playoffs', label: 'Playoffs' },
