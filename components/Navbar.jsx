@@ -15,6 +15,8 @@ const NAV_ITEMS = [
   { href: '/rules', label: 'Rules' },
 ];
 
+const ADMIN_NAV = { href: '/admin', label: 'Admin' };
+
 export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
@@ -79,6 +81,11 @@ export default function Navbar() {
                     {label}
                   </Link>
                 ))}
+                {isAdmin && (
+                  <Link href={ADMIN_NAV.href} className={navLinkClass(ADMIN_NAV.href)}>
+                    {ADMIN_NAV.label}
+                  </Link>
+                )}
               </div>
 
               <div className="flex items-center gap-3">
@@ -128,6 +135,11 @@ export default function Navbar() {
                   {label}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link href={ADMIN_NAV.href} className={`block ${navLinkClass(ADMIN_NAV.href)}`}>
+                  {ADMIN_NAV.label}
+                </Link>
+              )}
               <button type="button" onClick={() => setShowLogoutModal(true)} className="btn-ghost w-full justify-start">
                 Account
               </button>
