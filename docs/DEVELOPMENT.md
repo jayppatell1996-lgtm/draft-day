@@ -53,6 +53,15 @@ Apply the Phase 6 transfer-window migration (once):
 node --env-file=.env.local scripts/migrate-transfer-window.js
 ```
 
+Apply the Phase 8 scoring migration (once):
+
+```powershell
+npm run migrate-scoring
+npm test
+```
+
+Mock scoring for H2H testing: **Admin → Scoring** at `/admin` (submit fixture JSON with player UUIDs, then **Recalculate round**).
+
 Generate a NextAuth secret:
 
 ```powershell
