@@ -3,6 +3,12 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import AdminScoringConfig from './AdminScoringConfig';
+import AdminLeagueSettings from './AdminLeagueSettings';
+import AdminTradeRules from './AdminTradeRules';
+import AdminSquadStructure from './AdminSquadStructure';
+import AdminPlayers from './AdminPlayers';
+import AdminLockTimes from './AdminLockTimes';
+import AdminAudit from './AdminAudit';
 
 export default function AdminPanel() {
   const { data: session, status } = useSession();
@@ -182,7 +188,7 @@ export default function AdminPanel() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-400">Admin</p>
           <h1 className="mt-2 text-2xl font-semibold text-white">League controls</h1>
           <p className="mt-2 text-sm text-zinc-400">
-            Reset or regenerate the H2H tournament for fresh testing.
+            League settings, trade rules, schedule, scoring, and audit tools.
           </p>
         </div>
         <Link href="/standings" className="btn-ghost text-sm">
@@ -256,7 +262,11 @@ export default function AdminPanel() {
         </div>
       )}
 
-      <div className="surface-card p-4">
+      <AdminLeagueSettings disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+      <AdminTradeRules disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+      <AdminSquadStructure disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+
+      <div className="surface-card mt-6 p-4">
         <h2 className="text-sm font-semibold text-white">Tournament</h2>
         <p className="mt-2 text-sm text-zinc-400">
           Use <strong className="font-medium text-zinc-300">Reset</strong> to clear the current
@@ -402,6 +412,10 @@ export default function AdminPanel() {
           </button>
         </div>
       </div>
+
+      <AdminAudit disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+      <AdminPlayers disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+      <AdminLockTimes disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
     </div>
   );
 }

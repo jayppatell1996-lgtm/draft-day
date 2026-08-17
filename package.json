@@ -1,6 +1,6 @@
 {
   "name": "draft-day",
-  "version": "0.8.0",
+  "version": "0.10.0",
   "description": "Draft Day — salary-cap head-to-head fantasy cricket league",
   "scripts": {
     "dev": "next dev",
@@ -9,10 +9,12 @@
     "test:lineup": "node scripts/test-effective-lineup.js",
     "test:scoring": "node scripts/test-scoring.js",
     "test:playoffs": "node scripts/test-playoffs.js",
-    "test": "node scripts/test-effective-lineup.js && node scripts/test-scoring.js && node scripts/test-playoffs.js",
+    "test:trade-rules": "node scripts/test-trade-rules.js",
+    "test": "node scripts/test-effective-lineup.js && node scripts/test-scoring.js && node scripts/test-playoffs.js && node scripts/test-trade-rules.js",
     "migrate-scoring": "node --env-file=.env.local scripts/migrate-scoring.js",
     "migrate-scoring-config": "node --env-file=.env.local scripts/migrate-scoring-config.js",
-    "migrate-playoffs": "node --env-file=.env.local scripts/migrate-playoffs.js"
+    "migrate-playoffs": "node --env-file=.env.local scripts/migrate-playoffs.js",
+    "migrate-trade-rules": "node --env-file=.env.local scripts/migrate-trade-rules.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.16.0",
