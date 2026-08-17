@@ -177,7 +177,7 @@ export default function LeagueStandings() {
             </tbody>
           </table>
           <p className="px-4 py-3 text-xs text-zinc-500">
-            Points: Win 2 · Draw 1 · Loss 0. No-result matches excluded (scoring in Phase 8).
+            Points: Win 2 · Draw 1 · Loss 0. Fantasy points drive H2H results (Phase 8).
           </p>
         </div>
       )}

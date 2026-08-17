@@ -12,6 +12,25 @@ export default function AdminPanel() {
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [clearTransfers, setClearTransfers] = useState(false);
+  const [roundNumber, setRoundNumber] = useState('1');
+  const [scorePayload, setScorePayload] = useState(
+    JSON.stringify(
+      {
+        externalFixtureId: 900001,
+        localTeamName: 'Team A',
+        visitorTeamName: 'Team B',
+        entries: [
+          {
+            playerId: 'REPLACE_WITH_PLAYER_UUID',
+            featuredInXi: true,
+            stats: { runs: 45, ballsFaced: 30, fours: 4, sixes: 1 },
+          },
+        ],
+      },
+      null,
+      2
+    )
+  );
 
   useEffect(() => {
     if (status === 'loading') return;
@@ -71,6 +90,49 @@ export default function AdminPanel() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `${labels[action]} failed`);
       setMessage(data.message || 'Done.');
+      await loadOverview();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function submitFixtureScores() {
+    setBusy('score');
+    setError('');
+    setMessage('');
+    try {
+      const payload = JSON.parse(scorePayload);
+      const res = await fetch('/api/admin/score-fixture', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roundNumber: Number(roundNumber), ...payload }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to submit fixture scores');
+      setMessage(data.message || 'Fixture scores saved.');
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
+  async function recalculateRound() {
+    if (!window.confirm(`Recalculate H2H results for round ${roundNumber}?`)) return;
+    setBusy('recalc');
+    setError('');
+    setMessage('');
+    try {
+      const res = await fetch('/api/admin/recalculate-round', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ roundNumber: Number(roundNumber) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to recalculate round');
+      setMessage(data.message || 'Round recalculated.');
       await loadOverview();
     } catch (err) {
       setError(err.message);
@@ -217,6 +279,55 @@ export default function AdminPanel() {
           <li>Regenerate — reset (if needed) then builds a new round-robin from current teams.</li>
           <li>Does not delete fantasy teams, accounts, or squad players.</li>
         </ul>
+      </div>
+
+      <div className="surface-card mt-6 p-4">
+        <h2 className="text-sm font-semibold text-white">Scoring (testing)</h2>
+        <p className="mt-2 text-sm text-zinc-400">
+          Submit mock fixture scores, then recalculate the H2H round. Use player UUIDs from your
+          squad pool. Run <code className="text-accent-300">npm run migrate-scoring</code> once if
+          tables are missing.
+        </p>
+
+        <label className="mt-4 block text-sm text-zinc-300">
+          H2H round number
+          <input
+            type="number"
+            min={1}
+            value={roundNumber}
+            onChange={(e) => setRoundNumber(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-white/10 bg-surface-950 px-3 py-2 text-sm"
+          />
+        </label>
+
+        <label className="mt-4 block text-sm text-zinc-300">
+          Fixture score JSON
+          <textarea
+            rows={12}
+            value={scorePayload}
+            onChange={(e) => setScorePayload(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-white/10 bg-surface-950 px-3 py-2 font-mono text-xs"
+          />
+        </label>
+
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            type="button"
+            disabled={Boolean(busy)}
+            onClick={submitFixtureScores}
+            className="btn-primary"
+          >
+            {busy === 'score' ? 'Saving…' : 'Submit fixture scores'}
+          </button>
+          <button
+            type="button"
+            disabled={Boolean(busy) || !league?.hasSchedule}
+            onClick={recalculateRound}
+            className="btn-ghost"
+          >
+            {busy === 'recalc' ? 'Working…' : 'Recalculate round'}
+          </button>
+        </div>
       </div>
     </div>
   );
