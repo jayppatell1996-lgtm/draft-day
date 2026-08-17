@@ -26,6 +26,7 @@ export default function LeagueStandings() {
   const [error, setError] = useState('');
   const [initMessage, setInitMessage] = useState('');
   const [initializing, setInitializing] = useState(false);
+  const [playoffBusy, setPlayoffBusy] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -45,6 +46,27 @@ export default function LeagueStandings() {
     }
     load();
   }, []);
+
+  async function handleStartPlayoffs() {
+    if (!window.confirm('Start IPL playoffs from current top-6 standings?')) return;
+    setPlayoffBusy(true);
+    setInitMessage('');
+    setError('');
+    try {
+      const res = await fetch('/api/league/init-playoffs', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to start playoffs');
+      setInitMessage(data.message || 'Playoffs started.');
+      const refresh = await fetch('/api/league/standings', { cache: 'no-store' });
+      const refreshed = await refresh.json();
+      setStandings(refreshed.standings || []);
+      setLeague(refreshed.league);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setPlayoffBusy(false);
+    }
+  }
 
   async function handleInitSchedule() {
     setInitializing(true);
@@ -75,6 +97,9 @@ export default function LeagueStandings() {
   }
 
   const myTeamId = session?.user?.teamId;
+  const playoffStatus = league?.playoffStatus;
+  const showPlayoffLine =
+    league?.hasSchedule && standings.length >= 6 && !playoffStatus?.hasPlayoffs;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -95,9 +120,26 @@ export default function LeagueStandings() {
             </div>
             <div className="flex flex-wrap gap-2">
               {league.hasSchedule && (
-                <Link href="/matchups" className="btn-primary">
-                  View matchups
-                </Link>
+                <>
+                  <Link href="/matchups" className="btn-primary">
+                    View matchups
+                  </Link>
+                  {(playoffStatus?.hasPlayoffs || playoffStatus?.canStartPlayoffs) && (
+                    <Link href="/playoffs" className="btn-ghost text-sm">
+                      Playoffs
+                    </Link>
+                  )}
+                </>
+              )}
+              {session?.user?.isAdmin && playoffStatus?.canStartPlayoffs && (
+                <button
+                  type="button"
+                  onClick={handleStartPlayoffs}
+                  disabled={playoffBusy}
+                  className="btn-primary"
+                >
+                  {playoffBusy ? 'Starting…' : 'Start playoffs'}
+                </button>
               )}
               {session?.user?.isAdmin && !league.hasSchedule && (
                 <button
@@ -158,7 +200,7 @@ export default function LeagueStandings() {
                   key={row.teamId}
                   className={`border-b border-white/5 ${
                     row.teamId === myTeamId ? 'bg-accent-500/10' : ''
-                  }`}
+                  } ${showPlayoffLine && index === 5 ? 'border-b-2 border-accent-500/40' : ''}`}
                 >
                   <td className="px-4 py-3 text-zinc-500">{index + 1}</td>
                   <td className="px-4 py-3 font-medium text-zinc-100">
@@ -178,6 +220,17 @@ export default function LeagueStandings() {
           </table>
           <p className="px-4 py-3 text-xs text-zinc-500">
             Points: Win 2 · Draw 1 · Loss 0. Fantasy points drive H2H results (Phase 8).
+            {showPlayoffLine && (
+              <span className="text-accent-400"> Top 6 qualify for IPL playoffs.</span>
+            )}
+            {playoffStatus?.hasPlayoffs && (
+              <span className="text-accent-400">
+                {' '}
+                <Link href="/playoffs" className="underline hover:text-accent-300">
+                  View bracket →
+                </Link>
+              </span>
+            )}
           </p>
         </div>
       )}

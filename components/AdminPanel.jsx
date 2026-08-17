@@ -120,6 +120,24 @@ export default function AdminPanel() {
     }
   }
 
+  async function startPlayoffs() {
+    if (!window.confirm('Start IPL playoffs from current top-6 standings?')) return;
+    setBusy('playoffs');
+    setError('');
+    setMessage('');
+    try {
+      const res = await fetch('/api/league/init-playoffs', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to start playoffs');
+      setMessage(data.message || 'Playoffs started.');
+      await loadOverview();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy('');
+    }
+  }
+
   async function recalculateRound() {
     if (!window.confirm(`Recalculate H2H results for round ${roundNumber}?`)) return;
     setBusy('recalc');
@@ -155,6 +173,7 @@ export default function AdminPanel() {
   }
 
   const { league, teams, stats } = overview || {};
+  const playoffStatus = league?.playoffStatus;
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
@@ -280,6 +299,53 @@ export default function AdminPanel() {
           <li>Regenerate — reset (if needed) then builds a new round-robin from current teams.</li>
           <li>Does not delete fantasy teams, accounts, or squad players.</li>
         </ul>
+      </div>
+
+      <div className="surface-card mt-6 p-4">
+        <h2 className="text-sm font-semibold text-white">Playoffs</h2>
+        <p className="mt-2 text-sm text-zinc-400">
+          After the regular season, top 6 seeds enter the IPL bracket (Q1, Eliminator, Q2, Final).
+          Playoff rounds advance automatically when you recalculate scores.
+        </p>
+        {playoffStatus && (
+          <dl className="mt-3 grid gap-2 text-sm text-zinc-300 sm:grid-cols-2">
+            <div>
+              <dt className="text-zinc-500">Regular season</dt>
+              <dd>
+                {playoffStatus.regularSeasonProgress?.completedMatchups ?? 0} /{' '}
+                {playoffStatus.regularSeasonProgress?.totalMatchups ?? 0} matchups
+              </dd>
+            </div>
+            <div>
+              <dt className="text-zinc-500">Bracket</dt>
+              <dd>{playoffStatus.hasPlayoffs ? 'Live' : 'Not started'}</dd>
+            </div>
+          </dl>
+        )}
+        <div className="mt-4 flex flex-wrap gap-3">
+          {playoffStatus?.canStartPlayoffs && (
+            <button
+              type="button"
+              disabled={Boolean(busy)}
+              onClick={startPlayoffs}
+              className="btn-primary"
+            >
+              {busy === 'playoffs' ? 'Starting…' : 'Start playoffs'}
+            </button>
+          )}
+          {(playoffStatus?.hasPlayoffs || playoffStatus?.canStartPlayoffs) && (
+            <Link href="/playoffs" className="btn-ghost text-sm">
+              View bracket
+            </Link>
+          )}
+        </div>
+        {playoffStatus && !playoffStatus.canStartPlayoffs && !playoffStatus.hasPlayoffs && (
+          <p className="mt-3 text-xs text-zinc-500">
+            {playoffStatus.needsMoreTeams
+              ? `Need at least ${playoffStatus.minPlayoffTeams} teams.`
+              : 'Finish all regular-season matchups before starting playoffs.'}
+          </p>
+        )}
       </div>
 
       <AdminScoringConfig

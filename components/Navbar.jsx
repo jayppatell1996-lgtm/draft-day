@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: '/squad', label: 'My Squad' },
   { href: '/trades', label: 'Trades' },
   { href: '/standings', label: 'Standings' },
+  { href: '/playoffs', label: 'Playoffs' },
   { href: '/matchups', label: 'Matchups' },
   { href: '/matches', label: 'Matches' },
   { href: '/leaderboard', label: 'Leaderboard' },
