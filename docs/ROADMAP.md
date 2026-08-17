@@ -4,6 +4,8 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 **Test tournaments:** CPL 2026, The Hundred, bilateral T20s — before full IPL season.
 
+**Development sequence (after Phase 8):** playoffs → admin (rest) → UI polish → pool stats → **live data last**. Phase numbers stay fixed for branch names; build `feature/09-live-score-sync` when the app is otherwise feature-complete. Scoring can be tested with admin mock data until then.
+
 ---
 
 ## Phase 1 — Foundation (`feature/01-foundation`)
@@ -84,14 +86,16 @@ CPL rules from spec PDF:
 - [x] Admin submit fixture scores + recalculate H2H round
 - [x] Unit tests (`npm run test:scoring`)
 
-## Phase 9 — Live data (`feature/09-live-score-sync`)
+## Phase 9 — Live data (`feature/09-live-score-sync`) — **build last**
+
+Deferred until Phases 10–13 are done. Until then, use admin mock fixture scores and manual lock times.
 
 - CricAPI for fixtures, squads, ball-by-ball / scorecards
 - Lock times stored in DB, shown in MT on free agent cards
-- Admin manual score sync trigger
+- Admin automatic score sync (replaces manual JSON entry)
 - Locked players greyed out in UI
 
-## Phase 10 — Playoffs (`feature/10-playoffs`)
+## Phase 10 — Playoffs (`feature/10-playoffs`) — **next**
 
 Top 6 → IPL format:
 
@@ -117,7 +121,7 @@ Central admin panel for league operators (first registered user = admin; guard a
 - [ ] **Players:** adjust prices (individual or bulk); activate/deactivate pool entries
 - [ ] **Audit:** view all teams, squads, transfers, and trade logs
 
-Depends on Phase 6 (transfer engine) and Phase 9 (live data sync hooks).
+Depends on Phase 6 (transfers). Lock overrides can be manual until Phase 9 live sync.
 
 ## Phase 12 — UI polish (`feature/12-ui-pages`)
 
@@ -133,7 +137,7 @@ Tournament-aware player cards in the squad builder / free-agent pool:
 - [ ] Season-to-date stats per player (runs, wickets, fantasy pts, matches played)
 - [ ] Form badge: **In form** / **Average** / **Out of form** (derived from recent scores vs season baseline)
 - [ ] Sort pool by form, price, role, franchise
-- [ ] Data from score sync (depends on Phase 8 scoring + Phase 9 live data)
+- [ ] Data from `player_match_scores` (admin mock until Phase 9 live sync)
 - [ ] Show on `/squad` player pool rows and future Free Agents page
 - [ ] Ensure full squad including bench is picked within the salary cap
 - [ ] Save option when changing players in squad

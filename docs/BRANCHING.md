@@ -13,11 +13,11 @@
 | `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | Done (merged, `v0.6.0-transfers`) |
 | `feature/07-auto-sub` | Bench auto-sub when playing XI don't feature | Done (merged, `v0.7.0-auto-sub`) |
 | `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Done (merged, `v0.8.0-scoring`) |
-| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Next** |
-| `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | Planned |
+| `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | **Next** |
 | `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Partial (schedule reset + mock scoring) |
 | `feature/12-ui-pages` | Free agents, My Team, trade history | Planned |
 | `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | Planned |
+| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Last** (after 10–13) |
 
 ## Workflow
 
@@ -55,6 +55,14 @@
 
 ## Dependency order
 
+Phase numbers are fixed (branch names). **Build order after Phase 8:**
+
+```
+10-playoffs → 11-admin-controls → 12-ui-pages → 13-player-pool-stats → 09-live-score-sync (last)
+```
+
+Full tree:
+
 ```
 01-foundation
   └─► 02-auth-nextauth
@@ -63,12 +71,12 @@
               ├─► 05-league-h2h
               └─► 06-transfers-locks
                     ├─► 07-auto-sub
-                    ├─► 08-scoring-engine
-                    └─► 09-live-score-sync
+                    └─► 08-scoring-engine
                           ├─► 10-playoffs
                           ├─► 11-admin-controls
                           ├─► 12-ui-pages
-                          └─► 13-player-pool-stats
+                          ├─► 13-player-pool-stats
+                          └─► 09-live-score-sync (last — CricAPI + auto sync)
 ```
 
-`08-scoring-engine` and `09-live-score-sync` can be developed in parallel after `03` if needed, but both should land before playoffs go live. `11-admin-controls` needs Phase 6 (transfers) and Phase 9 (sync hooks) for full functionality; partial admin (schedule, squad structure) can ship earlier if split.
+Scoring and H2H can be tested with admin mock fixture data until Phase 9 lands. Playoffs should be built before live sync so bracket logic is stable first.
