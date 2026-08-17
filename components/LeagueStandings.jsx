@@ -109,6 +109,11 @@ export default function LeagueStandings() {
                   {initializing ? 'Creating…' : 'Generate schedule'}
                 </button>
               )}
+              {session?.user?.isAdmin && (
+                <Link href="/admin" className="btn-ghost text-sm">
+                  Admin
+                </Link>
+              )}
             </div>
           </div>
           {initMessage && (

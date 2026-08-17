@@ -28,7 +28,7 @@ git push origin --tags
 
 | Variable | Value |
 |----------|--------|
-| `DATABASE_URL` | Supabase Postgres URI (same as `.env.local`) |
+| `DATABASE_URL` | Supabase Postgres URI — **use Session pooler on Vercel** (not direct `db.*.supabase.co`) |
 | `NEXTAUTH_SECRET` | Same as local (`openssl rand -base64 32`) |
 | `NEXTAUTH_URL` | `https://YOUR-PROJECT.vercel.app` (set after first deploy, then redeploy) |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
