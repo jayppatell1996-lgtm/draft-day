@@ -17,15 +17,21 @@ function Field({ label, name, value, onChange, step = 1 }) {
   );
 }
 
-export default function AdminScoringConfig({ disabled, onMessage, onError }) {
+export default function AdminScoringConfig({ disabled, onMessage, onError, initialData }) {
   const [form, setForm] = useState(defaultScoringForm());
   const [isDefault, setIsDefault] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
   const [busy, setBusy] = useState('');
 
   useEffect(() => {
+    if (initialData) {
+      setForm(initialData.form);
+      setIsDefault(Boolean(initialData.isDefault));
+      setLoading(false);
+      return;
+    }
     loadConfig();
-  }, []);
+  }, [initialData]);
 
   async function loadConfig() {
     setLoading(true);

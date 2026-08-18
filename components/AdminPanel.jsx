@@ -13,7 +13,7 @@ import AdminAudit from './AdminAudit';
 export default function AdminPanel() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [overview, setOverview] = useState(null);
+  const [bootstrap, setBootstrap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState('');
   const [error, setError] = useState('');
@@ -46,14 +46,14 @@ export default function AdminPanel() {
     }
   }, [session, status, router]);
 
-  async function loadOverview() {
+  async function loadBootstrap() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('/api/admin/overview', { cache: 'no-store' });
+      const res = await fetch('/api/admin/bootstrap', { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to load admin data');
-      setOverview(data);
+      setBootstrap(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -63,7 +63,7 @@ export default function AdminPanel() {
 
   useEffect(() => {
     if (session?.user?.isAdmin) {
-      loadOverview();
+      loadBootstrap();
     }
   }, [session?.user?.isAdmin]);
 
@@ -97,7 +97,7 @@ export default function AdminPanel() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || `${labels[action]} failed`);
       setMessage(data.message || 'Done.');
-      await loadOverview();
+      await loadBootstrap();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -136,7 +136,7 @@ export default function AdminPanel() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to start playoffs');
       setMessage(data.message || 'Playoffs started.');
-      await loadOverview();
+      await loadBootstrap();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -158,7 +158,7 @@ export default function AdminPanel() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to recalculate round');
       setMessage(data.message || 'Round recalculated.');
-      await loadOverview();
+      await loadBootstrap();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -178,7 +178,7 @@ export default function AdminPanel() {
     return null;
   }
 
-  const { league, teams, stats } = overview || {};
+  const { league, teams, stats } = bootstrap || {};
   const playoffStatus = league?.playoffStatus;
 
   return (
@@ -262,9 +262,24 @@ export default function AdminPanel() {
         </div>
       )}
 
-      <AdminLeagueSettings disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
-      <AdminTradeRules disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
-      <AdminSquadStructure disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+      <AdminLeagueSettings
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+        initialSettings={bootstrap?.leagueSettings}
+      />
+      <AdminTradeRules
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+        initialData={bootstrap?.tradeRules}
+      />
+      <AdminSquadStructure
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+        initialSlots={bootstrap?.squadStructure?.slots}
+      />
 
       <div className="surface-card mt-6 p-4">
         <h2 className="text-sm font-semibold text-white">Tournament</h2>
@@ -362,6 +377,7 @@ export default function AdminPanel() {
         disabled={Boolean(busy)}
         onMessage={setMessage}
         onError={setError}
+        initialData={bootstrap?.scoringConfig}
       />
 
       <div className="surface-card mt-6 p-4">
@@ -413,9 +429,24 @@ export default function AdminPanel() {
         </div>
       </div>
 
-      <AdminAudit disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
-      <AdminPlayers disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
-      <AdminLockTimes disabled={Boolean(busy)} onMessage={setMessage} onError={setError} />
+      <AdminAudit
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+        initialAudit={bootstrap?.audit}
+      />
+      <AdminPlayers
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+        initialPlayers={bootstrap?.players?.players}
+      />
+      <AdminLockTimes
+        disabled={Boolean(busy)}
+        onMessage={setMessage}
+        onError={setError}
+        initialData={bootstrap?.lockTimes}
+      />
     </div>
   );
 }

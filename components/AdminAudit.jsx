@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 
-export default function AdminAudit({ disabled, onMessage, onError }) {
-  const [audit, setAudit] = useState(null);
-  const [loading, setLoading] = useState(true);
+export default function AdminAudit({ disabled, onMessage, onError, initialAudit }) {
+  const [audit, setAudit] = useState(initialAudit ?? null);
+  const [loading, setLoading] = useState(!initialAudit);
 
   useEffect(() => {
+    if (initialAudit) {
+      setAudit(initialAudit);
+      setLoading(false);
+      return;
+    }
     loadAudit();
-  }, []);
+  }, [initialAudit]);
 
   async function loadAudit() {
     setLoading(true);

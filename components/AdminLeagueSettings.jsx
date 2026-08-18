@@ -18,7 +18,7 @@ function Field({ label, name, value, onChange, type = 'text', step, min, max }) 
   );
 }
 
-export default function AdminLeagueSettings({ disabled, onMessage, onError }) {
+export default function AdminLeagueSettings({ disabled, onMessage, onError, initialSettings }) {
   const [form, setForm] = useState({
     name: '',
     seasonLabel: '',
@@ -26,12 +26,27 @@ export default function AdminLeagueSettings({ disabled, onMessage, onError }) {
     maxTeams: 12,
     teamCount: 0,
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialSettings);
   const [busy, setBusy] = useState(false);
 
+  function applySettings(settings) {
+    setForm({
+      name: settings.name,
+      seasonLabel: settings.seasonLabel,
+      salaryCap: settings.salaryCap,
+      maxTeams: settings.maxTeams,
+      teamCount: settings.teamCount,
+    });
+  }
+
   useEffect(() => {
+    if (initialSettings) {
+      applySettings(initialSettings);
+      setLoading(false);
+      return;
+    }
     loadSettings();
-  }, []);
+  }, [initialSettings]);
 
   async function loadSettings() {
     setLoading(true);
@@ -40,13 +55,7 @@ export default function AdminLeagueSettings({ disabled, onMessage, onError }) {
       const res = await fetch('/api/admin/league-settings', { cache: 'no-store' });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to load league settings');
-      setForm({
-        name: data.settings.name,
-        seasonLabel: data.settings.seasonLabel,
-        salaryCap: data.settings.salaryCap,
-        maxTeams: data.settings.maxTeams,
-        teamCount: data.settings.teamCount,
-      });
+      applySettings(data.settings);
     } catch (err) {
       onError(err.message);
     } finally {

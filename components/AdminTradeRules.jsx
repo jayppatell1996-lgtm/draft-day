@@ -18,15 +18,21 @@ function Field({ label, name, value, onChange }) {
   );
 }
 
-export default function AdminTradeRules({ disabled, onMessage, onError }) {
+export default function AdminTradeRules({ disabled, onMessage, onError, initialData }) {
   const [form, setForm] = useState(defaultTradeRulesForm());
   const [isDefault, setIsDefault] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
   const [busy, setBusy] = useState('');
 
   useEffect(() => {
+    if (initialData) {
+      setForm(initialData.form);
+      setIsDefault(Boolean(initialData.isDefault));
+      setLoading(false);
+      return;
+    }
     loadRules();
-  }, []);
+  }, [initialData]);
 
   async function loadRules() {
     setLoading(true);

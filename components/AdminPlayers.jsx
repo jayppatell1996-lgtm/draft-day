@@ -1,16 +1,21 @@
 import { useEffect, useState } from 'react';
 
-export default function AdminPlayers({ disabled, onMessage, onError }) {
-  const [players, setPlayers] = useState([]);
+export default function AdminPlayers({ disabled, onMessage, onError, initialPlayers }) {
+  const [players, setPlayers] = useState(initialPlayers ?? []);
   const [search, setSearch] = useState('');
   const [bulkPercent, setBulkPercent] = useState('5');
   const [bulkRole, setBulkRole] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialPlayers);
   const [busy, setBusy] = useState('');
 
   useEffect(() => {
+    if (initialPlayers) {
+      setPlayers(initialPlayers);
+      setLoading(false);
+      return;
+    }
     loadPlayers();
-  }, []);
+  }, [initialPlayers]);
 
   async function loadPlayers(query = search) {
     setLoading(true);

@@ -7,21 +7,30 @@ function toLocalInputValue(iso) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export default function AdminLockTimes({ disabled, onMessage, onError }) {
-  const [lockTimes, setLockTimes] = useState([]);
-  const [fixtures, setFixtures] = useState([]);
+export default function AdminLockTimes({ disabled, onMessage, onError, initialData }) {
+  const [lockTimes, setLockTimes] = useState(initialData?.lockTimes ?? []);
+  const [fixtures, setFixtures] = useState(initialData?.fixtures ?? []);
   const [form, setForm] = useState({
-    fixtureId: '',
+    fixtureId: initialData?.fixtures?.[0]?.id ?? '',
     franchiseExternalId: '',
     franchiseName: '',
     locksAt: '',
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialData);
   const [busy, setBusy] = useState('');
 
   useEffect(() => {
+    if (initialData) {
+      setLockTimes(initialData.lockTimes || []);
+      setFixtures(initialData.fixtures || []);
+      if (initialData.fixtures?.[0]) {
+        setForm((prev) => ({ ...prev, fixtureId: initialData.fixtures[0].id }));
+      }
+      setLoading(false);
+      return;
+    }
     loadData();
-  }, []);
+  }, [initialData]);
 
   async function loadData() {
     setLoading(true);

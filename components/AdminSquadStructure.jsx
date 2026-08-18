@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 
-export default function AdminSquadStructure({ disabled, onMessage, onError }) {
+export default function AdminSquadStructure({ disabled, onMessage, onError, initialSlots }) {
   const [slots, setSlots] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialSlots);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    if (initialSlots) {
+      setSlots(initialSlots);
+      setLoading(false);
+      return;
+    }
     loadStructure();
-  }, []);
+  }, [initialSlots]);
 
   async function loadStructure() {
     setLoading(true);
