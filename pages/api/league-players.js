@@ -2,6 +2,8 @@ import { getServerAuthSession } from '../../lib/getServerAuthSession';
 import { listLeaguePlayers } from '../../lib/players';
 import { getSquadWithSlots } from '../../lib/squads';
 import { getLockedPlayerIds } from '../../lib/locks';
+import { getLeaguePlayerInsightsMap, enrichPlayerWithInsights } from '../../lib/playerStats';
+import { attachLockInfoToPlayer, getFranchiseLockInfoMap } from '../../lib/playerPool';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -15,7 +17,11 @@ export default async function handler(req, res) {
     }
 
     const { role, franchise, search } = req.query;
-    const squadData = await getSquadWithSlots(session.user.teamId);
+    const [squadData, lockMap, insightsMap] = await Promise.all([
+      getSquadWithSlots(session.user.teamId),
+      getFranchiseLockInfoMap(),
+      getLeaguePlayerInsightsMap(),
+    ]);
     const ownedIds = squadData.slots.filter((s) => s.player_id).map((s) => s.player_id);
 
     const players = await listLeaguePlayers({
@@ -26,13 +32,15 @@ export default async function handler(req, res) {
     });
 
     const lockedIds = new Set(await getLockedPlayerIds());
-    const playersWithLocks = players.map((p) => ({
-      ...p,
-      locked: lockedIds.has(p.id),
-    }));
+    const playersEnriched = players.map((p) =>
+      enrichPlayerWithInsights(
+        { ...attachLockInfoToPlayer(p, lockMap), locked: lockedIds.has(p.id) },
+        insightsMap
+      )
+    );
 
     return res.status(200).json({
-      players: playersWithLocks,
+      players: playersEnriched,
       franchises: [...new Map(
         players
           .filter((p) => p.franchiseExternalId)

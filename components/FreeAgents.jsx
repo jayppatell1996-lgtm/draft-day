@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import LockCountdown, { OverseasBadge } from './PlayerPoolBadges';
+import LockCountdown, { FormBadge, OverseasBadge } from './PlayerPoolBadges';
 
 const SORT_LABELS = {
   price_desc: 'Price ↓',
@@ -9,6 +9,7 @@ const SORT_LABELS = {
   role: 'Role',
   franchise: 'Franchise',
   points_desc: 'Points ↓',
+  form_desc: 'Form ↓',
 };
 
 export default function FreeAgents() {
@@ -168,6 +169,7 @@ export default function FreeAgents() {
                       >
                         {player.fullName}
                       </Link>
+                      <FormBadge form={player.form} label={player.formLabel} />
                       <OverseasBadge isOverseas={player.isOverseas} />
                       {player.owned && (
                         <span className="rounded bg-accent-500/10 px-1.5 py-0.5 text-[10px] font-medium text-accent-300">

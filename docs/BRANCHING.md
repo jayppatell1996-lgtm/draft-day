@@ -16,8 +16,8 @@
 | `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | Done (merged, `v0.9.0-playoffs`) |
 | `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Done (merged, `v0.10.0-admin`) |
 | `feature/12-ui-pages` | Free agents, My Team, trade history, player stats | Done (merged, `v0.11.0-ui`) |
-| `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | **Next** |
-| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Last** (after 13) |
+| `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | Done (merged, `v0.12.0-pool-stats`) |
+| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Next** (last) |
 
 ## Workflow
 
