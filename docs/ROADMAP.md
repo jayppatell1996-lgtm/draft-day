@@ -6,16 +6,18 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 **Development sequence (after Phase 8):** playoffs → admin (rest) → UI polish → pool stats → **live data last**. Phase numbers stay fixed for branch names; build `feature/09-live-score-sync` when the app is otherwise feature-complete. Scoring can be tested with admin mock data until then.
 
+**Next work:** `feature/13-player-pool-stats` (form badges, squad pool stats, save flow)
+
 ---
 
-## Phase 1 — Foundation (`feature/01-foundation`)
+## Phase 1 — Foundation (`feature/01-foundation`) ✓
 
 - [x] Fork base from sanaro99/fantasy-cricket
 - [x] Git repo + branch strategy
-- [ ] `.env.example`, local dev verified (`npm install && npm run dev`)
+- [x] `.env.example`, local dev verified (`npm install && npm run dev`)
 - [x] Rename package to `draft-day` (display name **Draft Day**)
 
-## Phase 2 — Auth (`feature/02-auth-nextauth`)
+## Phase 2 — Auth (`feature/02-auth-nextauth`) ✓
 
 - [x] Email + password signup and login
 - [x] Team name at signup (2–30 chars, unique)
@@ -24,7 +26,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] First registered user → admin
 - [x] Protected routes → redirect to login
 
-## Phase 3 — Data model (`feature/03-database-schema`)
+## Phase 3 — Data model (`feature/03-database-schema`) ✓
 
 - [x] SQL migration: `20250815_league_core_schema.sql`
 - [x] `leagues`, `fantasy_teams` (+ league link), `league_users` (auth)
@@ -36,7 +38,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] `lock_times` (per franchise per real fixture)
 - [x] Run migration locally (`scripts/migrate-league-schema.js`)
 
-## Phase 4 — Salary cap & squad (`feature/04-salary-cap-squad`)
+## Phase 4 — Salary cap & squad (`feature/04-salary-cap-squad`) ✓
 
 - [x] 120-credit salary cap enforcement
 - [x] 16-player squad: 12 playing + 4 bench (auto-init slots)
@@ -46,7 +48,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] Player pool seed script (`scripts/seed-players.js`)
 - [x] Run seed locally and verify squad builder
 
-## Phase 5 — League format (`feature/05-league-h2h`)
+## Phase 5 — League format (`feature/05-league-h2h`) ✓
 
 - [x] Round-robin generator (2–12 teams; each pair once; rounds/matchups scale with team count)
 - [x] `rounds` + `h2h_matchups` schedule creation (script + admin API)
@@ -55,25 +57,25 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 - [x] `/matchups` head-to-head page per round
 - [x] Generate schedule when 2+ teams registered (admin button or `scripts/init-h2h-schedule.js`)
 
-## Phase 6 — Transfers & locks (`feature/06-transfers-locks`)
+## Phase 6 — Transfers & locks (`feature/06-transfers-locks`) ✓
 
-- [x] 3 free trades per H2H round, max 10 banked
+- [x] 3 free trades per H2H round, max 10 banked (defaults; editable in admin)
 - [x] 8 playoff trades (0 free)
 - [x] Lock-to-lock between deadlines (when `lock_times` populated)
 - [x] Lock enforced on both sides of a transfer
 - [x] Opponent squad hidden until match starts
 - [ ] Advance squad submission (future: round snapshots)
 - [x] Full trade log per team per round
-- [x] Trade limits read from league config (defaults until Phase 11 admin panel)
+- [x] Trade limits read from league config (DB via admin panel, Phase 11)
 
-## Phase 7 — Auto-sub (`feature/07-auto-sub`)
+## Phase 7 — Auto-sub (`feature/07-auto-sub`) ✓
 
 - [x] If playing player doesn't feature → highest-scoring bench player who played fills in
 - [x] Applied per match at round score calculation (`lib/effectiveLineup.js`)
 - [x] Captain cascade when captain doesn't play (vice gets 2×)
 - [x] Unit tests (`npm run test:lineup`)
 
-## Phase 8 — Scoring (`feature/08-scoring-engine`)
+## Phase 8 — Scoring (`feature/08-scoring-engine`) ✓
 
 CPL rules from spec PDF:
 
@@ -88,59 +90,64 @@ CPL rules from spec PDF:
 
 ## Phase 9 — Live data (`feature/09-live-score-sync`) — **build last**
 
-Deferred until Phases 10–13 are done. Until then, use admin mock fixture scores and manual lock times.
+Deferred until Phase 13 is done. Until then, use admin mock fixture scores and manual lock times.
 
-- CricAPI for fixtures, squads, ball-by-ball / scorecards
-- Lock times stored in DB, shown in MT on free agent cards
-- Admin automatic score sync (replaces manual JSON entry)
-- Locked players greyed out in UI
+- [ ] CricAPI for fixtures, squads, ball-by-ball / scorecards
+- [x] Lock times stored in DB; admin can set overrides (`/admin`, `lock_times` table)
+- [x] Lock countdown on free agent cards (`/free-agents`; manual until CricAPI sync)
+- [ ] Admin automatic score sync (replaces manual JSON entry)
+- [x] Locked players greyed out in squad builder pool
 
-## Phase 10 — Playoffs (`feature/10-playoffs`) — **next**
+## Phase 10 — Playoffs (`feature/10-playoffs`) ✓
 
-Top 6 → IPL format:
+Top 6 → IPL format (`v0.9.0-playoffs`):
 
-1. Qualifier 1 (1 vs 2)
-2. Eliminator (3 vs 4)
-3. Qualifier 2 (loser Q1 vs winner Eliminator)
-4. Final
+- [x] Qualifier 1 (#1 vs #2)
+- [x] Eliminator (#3 vs #4)
+- [x] Qualifier 2 (loser Q1 vs winner Eliminator)
+- [x] Final
+- [x] Bracket auto-advances when playoff round scores are recalculated
+- [x] `/playoffs` bracket UI + top-6 cut line on standings
+- [x] Admin **Start playoffs** + migration (`npm run migrate-playoffs`)
+- [x] Unit tests (`npm run test:playoffs`)
 
-Playoff bracket UI.
+## Phase 11 — Admin controls (`feature/11-admin-controls`) ✓
 
-## Phase 11 — Admin controls (`feature/11-admin-controls`)
+Central admin panel for league operators (first registered user = admin; guard all routes/APIs with `isAdmin`). Tagged `v0.10.0-admin`.
 
-Central admin panel for league operators (first registered user = admin; guard all routes/APIs with `isAdmin`).
-
-- [x] Admin-only `/admin` dashboard (partial)
-- [ ] **League settings:** season label, max teams (2–12), salary cap
-- [ ] **Trade rules:** free trades per H2H round, max banked, playoff trade allowance
-- [ ] **Squad structure:** edit slot counts via `squad_structure_config`
+- [x] Admin-only `/admin` dashboard
+- [x] **League settings:** season label, max teams (2–12), salary cap
+- [x] **Trade rules:** free trades per H2H round, max banked, playoff trade allowance
+- [x] **Squad structure:** edit slot counts via `squad_structure_config`
 - [x] **Schedule:** reset / regenerate H2H round-robin
-- [ ] **Locks:** view and override lock times per franchise / fixture
+- [x] **Locks:** view and override lock times per franchise / fixture
 - [x] **Scoring (testing):** submit mock fixture scores; recalculate H2H matchup results
 - [x] **Scoring rules:** admin-editable point values (batting, bowling, fielding, MoM, captain multiplier)
-- [ ] **Players:** adjust prices (individual or bulk); activate/deactivate pool entries
-- [ ] **Audit:** view all teams, squads, transfers, and trade logs
+- [x] **Players:** adjust prices (individual or bulk); activate/deactivate pool entries
+- [x] **Audit:** view all teams, squads, transfers, and trade logs
+- [x] Migration for trade rules JSONB (`npm run migrate-trade-rules`)
 
-Depends on Phase 6 (transfers). Lock overrides can be manual until Phase 9 live sync.
+## Phase 12 — UI polish (`feature/12-ui-pages`) ✓
 
-## Phase 12 — UI polish (`feature/12-ui-pages`)
+Tagged `v0.11.0-ui`.
 
-- Free Agents (filters, sort, lock countdown, overseas badge)
-- My Team (squad, C/VC, points)
-- Trade history
-- Player stats / history
+- [x] **Free agents** (`/free-agents`): filters, sort, lock countdown, overseas badge
+- [x] **My team** (`/my-team`): squad view, C/VC badges, season fantasy points
+- [x] **Trade history** (`/trades`): round filter, transfer window summary
+- [x] **Player stats / history** (`/player/[id]`): season totals + match log from `player_match_scores`
+- [x] Navbar links; squad builder links to My team & Free agents
 
-## Phase 13 — Player pool insights (`feature/13-player-pool-stats`)
+## Phase 13 — Player pool insights (`feature/13-player-pool-stats`) — **next**
 
 Tournament-aware player cards in the squad builder / free-agent pool:
 
-- [ ] Season-to-date stats per player (runs, wickets, fantasy pts, matches played)
+- [x] Basic season stats on `/free-agents` and `/player/[id]` (pts, matches — no form badge yet)
 - [ ] Form badge: **In form** / **Average** / **Out of form** (derived from recent scores vs season baseline)
-- [ ] Sort pool by form, price, role, franchise
-- [ ] Data from `player_match_scores` (admin mock until Phase 9 live sync)
-- [ ] Show on `/squad` player pool rows and future Free Agents page
-- [ ] Ensure full squad including bench is picked within the salary cap
-- [ ] Save option when changing players in squad
+- [x] Sort pool by price, role, franchise, points (form sort pending)
+- [x] Data from `player_match_scores` (admin mock until Phase 9 live sync)
+- [ ] Show stats on `/squad` player pool rows (only on Free agents page today)
+- [ ] Ensure full squad including bench is picked within the salary cap before save
+- [ ] Save option when changing players in squad (explicit confirm vs instant assign)
 
 ---
 

@@ -13,11 +13,11 @@
 | `feature/06-transfers-locks` | Lock-to-lock transfers, trade banking, trade log | Done (merged, `v0.6.0-transfers`) |
 | `feature/07-auto-sub` | Bench auto-sub when playing XI don't feature | Done (merged, `v0.7.0-auto-sub`) |
 | `feature/08-scoring-engine` | CPL scoring rules, captain 2× / VC 1× | Done (merged, `v0.8.0-scoring`) |
-| `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | **Next** |
-| `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Partial (schedule reset + mock scoring) |
-| `feature/12-ui-pages` | Free agents, My Team, trade history | Planned |
-| `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | Planned |
-| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Last** (after 10–13) |
+| `feature/10-playoffs` | IPL-style Q1 / Eliminator / Q2 / Final bracket | Done (merged, `v0.9.0-playoffs`) |
+| `feature/11-admin-controls` | Admin panel: league/trade/squad/scoring config + audit | Done (merged, `v0.10.0-admin`) |
+| `feature/12-ui-pages` | Free agents, My Team, trade history, player stats | Done (merged, `v0.11.0-ui`) |
+| `feature/13-player-pool-stats` | Pool cards: tournament stats + form badges | **Next** |
+| `feature/09-live-score-sync` | CricAPI match data, lock times, score sync jobs | **Last** (after 13) |
 
 ## Workflow
 

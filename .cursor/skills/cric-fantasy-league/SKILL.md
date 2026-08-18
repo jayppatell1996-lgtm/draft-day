@@ -28,8 +28,11 @@ Inspired by CricBattle; built by extending [sanaro99/fantasy-cricket](https://gi
 | Transfers & locks (Phase 6) | Done (merged `main`, tagged `v0.6.0-transfers`) |
 | Auto-sub (Phase 7) | Done (merged `main`, tagged `v0.7.0-auto-sub`) |
 | Scoring engine (Phase 8) | Done (merged `main`, tagged `v0.8.0-scoring`) |
-| **Next work** | `feature/10-playoffs` |
-| Live data (Phase 9) | **Last** — after phases 10–13 |
+| Playoffs (Phase 10) | Done (merged `main`, tagged `v0.9.0-playoffs`) |
+| Admin controls (Phase 11) | Done (merged `main`, tagged `v0.10.0-admin`) |
+| UI polish (Phase 12) | Done (merged `main`, tagged `v0.11.0-ui`) |
+| **Next work** | `feature/13-player-pool-stats` |
+| Live data (Phase 9) | **Last** — after Phase 13 |
 | Data | Upstream uses Sportmonks → **CricAPI** in Phase 9 (deferred) |
 
 Before coding, read `docs/BRANCHING.md` for the active feature branch and dependency order.
@@ -50,7 +53,7 @@ Before coding, read `docs/BRANCHING.md` for the active feature branch and depend
 4. Never commit `.env.local` or API keys.
 5. Only create git commits when the user asks.
 
-Feature branches (merge order after Phase 8): `10-playoffs` → `11-admin-controls` → `12-ui-pages` → `13-player-pool-stats` → `09-live-score-sync` (last). Phases 01–08 ✓.
+Feature branches (merge order after Phase 8): `10-playoffs` ✓ → `11-admin-controls` ✓ → `12-ui-pages` ✓ → `13-player-pool-stats` → `09-live-score-sync` (last). Phases 01–12 ✓.
 
 ## Product rules (do not drift)
 
