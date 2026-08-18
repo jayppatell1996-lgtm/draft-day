@@ -2,7 +2,7 @@ import { getServerAuthSession } from '../../lib/getServerAuthSession';
 import { listLeaguePlayers } from '../../lib/players';
 import { getSquadWithSlots } from '../../lib/squads';
 import { getFranchiseLockInfoMap, attachLockInfoToPlayer } from '../../lib/playerPool';
-import { getLeaguePlayerStatsMap } from '../../lib/playerStats';
+import { getLeaguePlayerInsightsMap, enrichPlayerWithInsights } from '../../lib/playerStats';
 import { getTransferWindowStatus } from '../../lib/transferWindow';
 
 const SORT_OPTIONS = {
@@ -14,6 +14,9 @@ const SORT_OPTIONS = {
     (a.franchiseName || '').localeCompare(b.franchiseName || '') ||
     a.fullName.localeCompare(b.fullName),
   points_desc: (a, b) => (b.seasonPoints ?? 0) - (a.seasonPoints ?? 0),
+  form_desc: (a, b) =>
+    (b.formScore ?? 0) - (a.formScore ?? 0) ||
+    (b.seasonPoints ?? 0) - (a.seasonPoints ?? 0),
 };
 
 export default async function handler(req, res) {
@@ -29,10 +32,10 @@ export default async function handler(req, res) {
 
     const { role, franchise, search, sort = 'price_desc', overseas } = req.query;
 
-    const [squadData, lockMap, statsMap] = await Promise.all([
+    const [squadData, lockMap, insightsMap] = await Promise.all([
       getSquadWithSlots(session.user.teamId),
       getFranchiseLockInfoMap(),
-      getLeaguePlayerStatsMap(),
+      getLeaguePlayerInsightsMap(),
     ]);
 
     const ownedIds = new Set(
@@ -54,13 +57,10 @@ export default async function handler(req, res) {
 
     players = players.map((player) => {
       const withLock = attachLockInfoToPlayer(player, lockMap);
-      const stats = statsMap.get(player.id);
-      return {
-        ...withLock,
-        owned: ownedIds.has(player.id),
-        seasonPoints: stats?.totalPoints ?? 0,
-        matchesPlayed: stats?.matches ?? 0,
-      };
+      return enrichPlayerWithInsights(
+        { ...withLock, owned: ownedIds.has(player.id) },
+        insightsMap
+      );
     });
 
     const sorter = SORT_OPTIONS[sort] || SORT_OPTIONS.price_desc;

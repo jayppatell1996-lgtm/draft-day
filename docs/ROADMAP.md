@@ -6,7 +6,7 @@ Season-long **salary-cap head-to-head** fantasy cricket league (CricBattle-style
 
 **Development sequence (after Phase 8):** playoffs → admin (rest) → UI polish → pool stats → **live data last**. Phase numbers stay fixed for branch names; build `feature/09-live-score-sync` when the app is otherwise feature-complete. Scoring can be tested with admin mock data until then.
 
-**Next work:** `feature/13-player-pool-stats` (form badges, squad pool stats, save flow)
+**Next work:** `feature/09-live-score-sync` (CricAPI fixtures, lock times, auto score sync)
 
 ---
 
@@ -90,7 +90,7 @@ CPL rules from spec PDF:
 
 ## Phase 9 — Live data (`feature/09-live-score-sync`) — **build last**
 
-Deferred until Phase 13 is done. Until then, use admin mock fixture scores and manual lock times.
+Phase 13 complete — build live sync last. Until then, use admin mock fixture scores and manual lock times.
 
 - [ ] CricAPI for fixtures, squads, ball-by-ball / scorecards
 - [x] Lock times stored in DB; admin can set overrides (`/admin`, `lock_times` table)
@@ -137,17 +137,17 @@ Tagged `v0.11.0-ui`.
 - [x] **Player stats / history** (`/player/[id]`): season totals + match log from `player_match_scores`
 - [x] Navbar links; squad builder links to My team & Free agents
 
-## Phase 13 — Player pool insights (`feature/13-player-pool-stats`) — **next**
+## Phase 13 — Player pool insights (`feature/13-player-pool-stats`) ✓
 
-Tournament-aware player cards in the squad builder / free-agent pool:
+Tagged `v0.12.0-pool-stats`. Tournament-aware player cards in the squad builder / free-agent pool:
 
-- [x] Basic season stats on `/free-agents` and `/player/[id]` (pts, matches — no form badge yet)
-- [ ] Form badge: **In form** / **Average** / **Out of form** (derived from recent scores vs season baseline)
-- [x] Sort pool by price, role, franchise, points (form sort pending)
+- [x] Basic season stats on `/free-agents` and `/player/[id]` (pts, matches)
+- [x] Form badge: **In form** / **Average** / **Out of form** (recent 3-match avg vs season baseline, ±15%)
+- [x] Sort pool by price, role, franchise, points, form
 - [x] Data from `player_match_scores` (admin mock until Phase 9 live sync)
-- [ ] Show stats on `/squad` player pool rows (only on Free agents page today)
-- [ ] Ensure full squad including bench is picked within the salary cap before save
-- [ ] Save option when changing players in squad (explicit confirm vs instant assign)
+- [x] Show stats + form on `/squad` player pool rows
+- [x] Full squad including bench required within salary cap before save (initial build)
+- [x] Draft + Save/Discard when editing squad (no instant assign)
 
 ---
 

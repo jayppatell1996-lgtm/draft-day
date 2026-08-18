@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import LockCountdown, { OverseasBadge } from './PlayerPoolBadges';
+import LockCountdown, { FormBadge, OverseasBadge } from './PlayerPoolBadges';
 
 export default function PlayerProfile({ playerId }) {
   const router = useRouter();
@@ -68,6 +68,7 @@ export default function PlayerProfile({ playerId }) {
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-2xl font-semibold text-white">{stats.fullName}</h1>
+              <FormBadge form={stats.form} label={stats.formLabel} />
               <OverseasBadge isOverseas={stats.isOverseas} />
               {!stats.active && (
                 <span className="rounded bg-zinc-700 px-2 py-0.5 text-xs text-zinc-300">Inactive</span>

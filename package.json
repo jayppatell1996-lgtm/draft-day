@@ -1,6 +1,6 @@
 {
   "name": "draft-day",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Draft Day — salary-cap head-to-head fantasy cricket league",
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,8 @@
     "test:scoring": "node scripts/test-scoring.js",
     "test:playoffs": "node scripts/test-playoffs.js",
     "test:trade-rules": "node scripts/test-trade-rules.js",
-    "test": "node scripts/test-effective-lineup.js && node scripts/test-scoring.js && node scripts/test-playoffs.js && node scripts/test-trade-rules.js",
+    "test:player-form": "node scripts/test-player-form.js",
+    "test": "node scripts/test-effective-lineup.js && node scripts/test-scoring.js && node scripts/test-playoffs.js && node scripts/test-trade-rules.js && node scripts/test-player-form.js",
     "migrate-scoring": "node --env-file=.env.local scripts/migrate-scoring.js",
     "migrate-scoring-config": "node --env-file=.env.local scripts/migrate-scoring-config.js",
     "migrate-playoffs": "node --env-file=.env.local scripts/migrate-playoffs.js",

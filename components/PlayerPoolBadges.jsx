@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { formBadgeClass } from '../lib/playerForm';
 
 function formatCountdown(ms) {
   if (ms == null || ms <= 0) return null;
@@ -60,6 +61,17 @@ export function OverseasBadge({ isOverseas, className = '' }) {
       className={`rounded border border-sky-500/30 bg-sky-500/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sky-300 ${className}`}
     >
       OS
+    </span>
+  );
+}
+
+export function FormBadge({ form, label, className = '' }) {
+  if (!form || form === 'unknown') return null;
+  return (
+    <span
+      className={`rounded border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${formBadgeClass(form)} ${className}`}
+    >
+      {label || form.replace(/_/g, ' ')}
     </span>
   );
 }
