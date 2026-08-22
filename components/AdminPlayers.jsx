@@ -159,7 +159,7 @@ export default function AdminPlayers({ disabled, onMessage, onError, initialPlay
       {loading ? (
         <p className="mt-4 text-sm text-zinc-400">Loading players…</p>
       ) : (
-        <div className="mt-4 max-h-96 overflow-auto rounded-lg border border-white/10">
+        <div className="mt-4 max-h-96 table-scroll rounded-lg border border-white/10">
           <table className="w-full text-left text-sm">
             <thead className="sticky top-0 bg-surface-900 text-xs uppercase text-zinc-500">
               <tr>

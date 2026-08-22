@@ -451,15 +451,15 @@ export default function SquadBuilder() {
               Full pool →
             </Link>
           </div>
-          <div className="mb-4 flex flex-wrap gap-2">
+          <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
             <input
               type="search"
               placeholder="Search players…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="input-dark max-w-xs flex-1"
+              className="input-dark col-span-2 sm:max-w-xs sm:flex-1"
             />
-            <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="input-dark w-auto">
+            <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="input-dark w-full sm:w-auto">
               <option value="">All roles</option>
               <option value="WK">WK</option>
               <option value="BAT">BAT</option>
@@ -469,14 +469,14 @@ export default function SquadBuilder() {
             <select
               value={franchiseFilter}
               onChange={(e) => setFranchiseFilter(e.target.value)}
-              className="input-dark w-auto"
+              className="input-dark w-full sm:w-auto"
             >
               <option value="">All teams</option>
               {franchises.map((f) => (
                 <option key={f.id} value={f.id}>{f.name}</option>
               ))}
             </select>
-            <select value={poolSort} onChange={(e) => setPoolSort(e.target.value)} className="input-dark w-auto">
+            <select value={poolSort} onChange={(e) => setPoolSort(e.target.value)} className="input-dark col-span-2 w-full sm:col-span-1 sm:w-auto">
               <option value="price_desc">Price ↓</option>
               <option value="price_asc">Price ↑</option>
               <option value="points_desc">Points ↓</option>
@@ -485,7 +485,7 @@ export default function SquadBuilder() {
             </select>
           </div>
 
-          <div className="max-h-[60vh] space-y-2 overflow-y-auto pr-1">
+          <div className="max-h-[50vh] space-y-2 overflow-y-auto overscroll-contain pr-1 sm:max-h-[60vh]">
             {players.map((player) => {
               const owned = ownedIds.has(player.id);
               const locked = player.locked;

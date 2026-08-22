@@ -93,15 +93,15 @@ export default function FreeAgents() {
       )}
 
       <div className="surface-card p-4">
-        <div className="mb-4 flex flex-wrap gap-2">
+        <div className="mb-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <input
             type="search"
             placeholder="Search players…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="input-dark min-w-[10rem] flex-1"
+            className="input-dark col-span-2 flex-1 sm:min-w-[10rem]"
           />
-          <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="input-dark w-auto">
+          <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="input-dark w-full sm:w-auto">
             <option value="">All roles</option>
             <option value="WK">WK</option>
             <option value="BAT">BAT</option>
@@ -111,7 +111,7 @@ export default function FreeAgents() {
           <select
             value={franchiseFilter}
             onChange={(e) => setFranchiseFilter(e.target.value)}
-            className="input-dark w-auto"
+            className="input-dark w-full sm:w-auto"
           >
             <option value="">All franchises</option>
             {franchises.map((f) => (
@@ -123,13 +123,13 @@ export default function FreeAgents() {
           <select
             value={overseasFilter}
             onChange={(e) => setOverseasFilter(e.target.value)}
-            className="input-dark w-auto"
+            className="input-dark w-full sm:w-auto"
           >
             <option value="">All players</option>
             <option value="true">Overseas only</option>
             <option value="false">Local only</option>
           </select>
-          <select value={sort} onChange={(e) => setSort(e.target.value)} className="input-dark w-auto">
+          <select value={sort} onChange={(e) => setSort(e.target.value)} className="input-dark col-span-2 w-full sm:col-span-1 sm:w-auto">
             {Object.entries(SORT_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
                 Sort: {label}

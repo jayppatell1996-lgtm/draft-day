@@ -105,7 +105,7 @@ export default function LeagueMatchups() {
                 id="round-select"
                 value={selectedRound}
                 onChange={handleRoundChange}
-                className="input-dark mt-1 w-auto min-w-[160px]"
+                className="input-dark mt-1 w-full sm:w-auto sm:min-w-[160px]"
               >
                 {rounds.map((r) => (
                   <option key={r.id} value={r.roundNumber}>

@@ -5,6 +5,10 @@ export default function Document() {
   return (
     <Html lang="en" className="dark">
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#090b10" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="application-name" content={APP_NAME} />
         <meta name="description" content={APP_TAGLINE} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -70,6 +70,9 @@ export default function Navbar() {
             <div className="relative h-8 w-8 overflow-hidden rounded-lg ring-1 ring-white/10">
               <Image src="/images/logo.png" alt={APP_NAME} fill className="object-contain p-0.5" />
             </div>
+            <div className="sm:hidden">
+              <p className="text-sm font-semibold tracking-tight text-zinc-100">{APP_NAME}</p>
+            </div>
             <div className="hidden sm:block">
               <p className="text-sm font-semibold tracking-tight text-zinc-100">{APP_NAME}</p>
               <p className="text-[11px] text-zinc-500">Salary cap league</p>
@@ -122,7 +125,7 @@ export default function Navbar() {
 
         {!isLoginPage && isMenuOpen && (
           <div className="border-t border-white/10 bg-surface-900 md:hidden">
-            <div className="space-y-1 px-4 py-3">
+            <div className="max-h-[70vh] space-y-1 overflow-y-auto overscroll-contain px-4 py-3">
               {teamName && (
                 <div className="mb-3 flex items-center gap-2 border-b border-white/10 pb-3">
                   <span className="truncate text-sm text-zinc-300">{teamName}</span>

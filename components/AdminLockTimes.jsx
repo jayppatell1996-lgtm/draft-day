@@ -184,7 +184,7 @@ export default function AdminLockTimes({ disabled, onMessage, onError, initialDa
         </button>
       )}
 
-      <div className="mt-6 overflow-auto rounded-lg border border-white/10">
+      <div className="mt-6 table-scroll rounded-lg border border-white/10">
         <table className="w-full text-left text-sm">
           <thead className="text-xs uppercase text-zinc-500">
             <tr>

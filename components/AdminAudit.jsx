@@ -49,7 +49,7 @@ export default function AdminAudit({ disabled, onMessage, onError, initialAudit 
       </div>
 
       <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-zinc-500">Teams</h3>
-      <div className="mt-2 overflow-auto rounded-lg border border-white/10">
+      <div className="mt-2 table-scroll rounded-lg border border-white/10">
         <table className="w-full text-left text-sm">
           <thead className="text-xs uppercase text-zinc-500">
             <tr>
@@ -77,7 +77,7 @@ export default function AdminAudit({ disabled, onMessage, onError, initialAudit 
       </div>
 
       <h3 className="mt-6 text-xs font-semibold uppercase tracking-wide text-zinc-500">Recent transfers</h3>
-      <div className="mt-2 max-h-48 overflow-auto rounded-lg border border-white/10">
+      <div className="mt-2 max-h-48 table-scroll rounded-lg border border-white/10">
         <table className="w-full text-left text-sm">
           <thead className="sticky top-0 bg-surface-900 text-xs uppercase text-zinc-500">
             <tr>

@@ -182,16 +182,17 @@ export default function LeagueStandings() {
         </div>
       ) : (
         <div className="surface-card overflow-hidden">
+          <div className="table-scroll">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-white/10 text-xs uppercase tracking-wide text-zinc-500">
-                <th className="px-4 py-3">#</th>
-                <th className="px-4 py-3">Team</th>
-                <th className="px-4 py-3 text-center">P</th>
-                <th className="px-4 py-3 text-center">W</th>
-                <th className="px-4 py-3 text-center">D</th>
-                <th className="px-4 py-3 text-center">L</th>
-                <th className="px-4 py-3 text-center">Pts</th>
+                <th className="px-2 py-2 sm:px-4 sm:py-3">#</th>
+                <th className="px-2 py-2 sm:px-4 sm:py-3">Team</th>
+                <th className="px-2 py-2 text-center sm:px-4 sm:py-3">P</th>
+                <th className="px-2 py-2 text-center sm:px-4 sm:py-3">W</th>
+                <th className="px-2 py-2 text-center sm:px-4 sm:py-3">D</th>
+                <th className="px-2 py-2 text-center sm:px-4 sm:py-3">L</th>
+                <th className="px-2 py-2 text-center sm:px-4 sm:py-3">Pts</th>
               </tr>
             </thead>
             <tbody>
@@ -202,22 +203,23 @@ export default function LeagueStandings() {
                     row.teamId === myTeamId ? 'bg-accent-500/10' : ''
                   } ${showPlayoffLine && index === 5 ? 'border-b-2 border-accent-500/40' : ''}`}
                 >
-                  <td className="px-4 py-3 text-zinc-500">{index + 1}</td>
-                  <td className="px-4 py-3 font-medium text-zinc-100">
+                  <td className="px-2 py-2 text-zinc-500 sm:px-4 sm:py-3">{index + 1}</td>
+                  <td className="px-2 py-2 font-medium text-zinc-100 sm:px-4 sm:py-3">
                     {row.teamName}
                     {row.teamId === myTeamId && (
                       <span className="ml-2 text-xs text-accent-400">You</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-center text-zinc-300">{row.played}</td>
-                  <td className="px-4 py-3 text-center text-zinc-300">{row.wins}</td>
-                  <td className="px-4 py-3 text-center text-zinc-300">{row.draws}</td>
-                  <td className="px-4 py-3 text-center text-zinc-300">{row.losses}</td>
-                  <td className="px-4 py-3 text-center font-semibold text-white">{row.points}</td>
+                  <td className="px-2 py-2 text-center text-zinc-300 sm:px-4 sm:py-3">{row.played}</td>
+                  <td className="px-2 py-2 text-center text-zinc-300 sm:px-4 sm:py-3">{row.wins}</td>
+                  <td className="px-2 py-2 text-center text-zinc-300 sm:px-4 sm:py-3">{row.draws}</td>
+                  <td className="px-2 py-2 text-center text-zinc-300 sm:px-4 sm:py-3">{row.losses}</td>
+                  <td className="px-2 py-2 text-center font-semibold text-white sm:px-4 sm:py-3">{row.points}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+          </div>
           <p className="px-4 py-3 text-xs text-zinc-500">
             Points: Win 2 · Draw 1 · Loss 0. Fantasy points drive H2H results (Phase 8).
             {showPlayoffLine && (
